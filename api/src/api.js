@@ -4,7 +4,7 @@ const usuarioRouter = require("./routes/usuarioRouter");
 const postRouter = require("./routes/postRouter");
 const comentarioRouter = require("./routes/comentarioRouter");
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 const app = express();
 
 app.use(cors());
