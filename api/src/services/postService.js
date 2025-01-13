@@ -5,6 +5,9 @@ const postService = {
     if (!titulo || !conteudo || !user_id) {
       return { erro: "Preencha todos os campos." };
     }
+    if (titulo.length < 3) {
+      return { erro: "O título deve ter no mínimo 3 caracteres." };
+    }
     try {
       const resultado = await Post.create({ titulo, conteudo, user_id });
       if (resultado.erro) return { erro: resultado.erro };
