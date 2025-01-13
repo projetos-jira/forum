@@ -23,6 +23,18 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      apelido: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      profissao: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       created_At: {
         type: Sequelize.DATE,
         allowNull: false,

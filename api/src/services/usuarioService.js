@@ -24,6 +24,29 @@ const usuarioService = {
       return { erro: err.message };
     }
   },
+  atualizarUsuario: async (
+    id,
+    nome,
+    email,
+    senha,
+    apelido,
+    profissao,
+    avatar
+  ) => {
+    if (!id) return { erro: "Envie o id do usuário" };
+    if (!nome && !email && !senha && !apelido && !profissao && !avatar)
+      return { erro: "Envie ao menos um campo para atualizar" };
+    try {
+      const resultado = await Usuario.update(
+        { nome, email, senha, apelido, profissao, avatar },
+        { where: { id } }
+      );
+      if (resultado.erro) return { erro: resultado.erro };
+      return resultado;
+    } catch (err) {
+      return { erro: err.message };
+    }
+  },
 };
 
 module.exports = usuarioService;

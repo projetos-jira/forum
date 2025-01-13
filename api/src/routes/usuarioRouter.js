@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post("/", usuarioController.cadastrarUsuario);
 router.get("/login", usuarioController.logarUsuario);
-// router.put("/:id", usuarioController.atualizarUsuario);
+router.put("/:id", usuarioController.atualizarUsuario);
 
 module.exports = router;
