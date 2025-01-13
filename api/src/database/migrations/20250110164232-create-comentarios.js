@@ -20,7 +20,7 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "users", key: "id" },
+        references: { model: "usuarios", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
@@ -28,15 +28,20 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      qtd_curtidas: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      qtd_curtidas: {
-        type: Sequelize.INTEGER,
+      updated_At: {
+        type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: Sequelize.NOW,
       },
     });
   },

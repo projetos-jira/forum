@@ -5,14 +5,23 @@ const usuarioService = {
     if (!nome || !email || !senha)
       return { erro: "Envie todos os campos obrigatórios" };
 
-    const usuario = { nome, email, senha };
-
     try {
-      const resultado = await Usuario.create(usuario);
+      const resultado = await Usuario.create({ nome, email, senha });
       if (resultado.erro) return { erro: resultado.erro };
       return resultado;
     } catch (err) {
-      return { erro: "Erro ao cadastrar usuário" };
+      return { erro: err.message };
+    }
+  },
+  logarUsuario: async (email, senha) => {
+    if (!email || !senha) return { erro: "Envie todos os campos obrigatórios" };
+
+    try {
+      const resultado = await Usuario.findOne({ where: { email, senha } });
+      if (!resultado) return { erro: "Usuário não encontrado" };
+      return resultado;
+    } catch (err) {
+      return { erro: err.message };
     }
   },
 };

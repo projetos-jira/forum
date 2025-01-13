@@ -11,15 +11,14 @@ class Usuario extends Model {
       {
         sequelize,
         modelName: "Usuario",
+        tableName: "usuarios",
+        timestamps: true,
       }
     );
   }
+  static associate(models) {
+    this.hasMany(models.Post, { foreignKey: "user_id", as: "posts" });
+  }
 }
-
-const Usuario = {
-  create: async (usuario) => {
-    return usuario;
-  },
-};
 
 module.exports = Usuario;

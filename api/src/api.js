@@ -4,6 +4,8 @@ const usuarioRouter = require("./routes/usuarioRouter");
 const postRouter = require("./routes/postRouter");
 const comentarioRouter = require("./routes/comentarioRouter");
 
+require("./database");
+
 const port = process.env.PORT || 3001;
 const app = express();
 
