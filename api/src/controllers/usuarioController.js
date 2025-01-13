@@ -12,7 +12,8 @@ const usuarioController = {
     });
   },
   logarUsuario: async (req, res) => {
-    const { email, senha } = req.body;
+    const { email, senha } = req.query;
+    console.log(email, senha);
 
     const resultado = await usuarioService.logarUsuario(email, senha);
     if (resultado.erro) return res.status(400).json(resultado);
