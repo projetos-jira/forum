@@ -24,6 +24,12 @@ const postController = {
       message: "Post atualizado com sucesso",
     });
   },
+  listarPostPorId: async (req, res) => {
+    const { id } = req.params;
+    const resultado = await postService.listarPostPorId(id);
+    if (resultado.erro) return res.status(400).json(resultado);
+    res.status(200).json(resultado);
+  },
 };
 
 module.exports = postController;

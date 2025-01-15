@@ -43,6 +43,16 @@ const postService = {
       return { erro: error.message };
     }
   },
+  listarPostPorId: async (id) => {
+    if (!id) return { erro: "Envie o id do post." };
+    try {
+      const resultado = await Post.findByPk(id);
+      if (!resultado) return { erro: "Post não encontrado." };
+      return resultado;
+    } catch (error) {
+      return { erro: error.message };
+    }
+  },
 };
 
 module.exports = postService;
