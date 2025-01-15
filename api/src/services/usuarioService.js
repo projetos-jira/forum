@@ -59,6 +59,18 @@ const usuarioService = {
       return { erro: err.message };
     }
   },
+  listarPostsPorUsuario: async (id) => {
+    if (!id) return { erro: "Envie o id do usuário" };
+    try {
+      const resultado = await Usuario.findByPk(id, {
+        include: { association: "posts" },
+      });
+      if (!resultado) return { erro: "Usuário não encontrado" };
+      return resultado.posts;
+    } catch (err) {
+      return { erro: err.message };
+    }
+  },
 };
 
 module.exports = usuarioService;

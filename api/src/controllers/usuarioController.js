@@ -1,4 +1,5 @@
 const usuarioService = require("../services/usuarioService");
+const { listarPosts } = require("./postController");
 
 const usuarioController = {
   cadastrarUsuario: async (req, res) => {
@@ -38,6 +39,15 @@ const usuarioController = {
     if (resultado.erro) return res.status(400).json(resultado);
     return res.status(200).json({
       message: "Usuário atualizado com sucesso",
+    });
+  },
+  listarPostsPorUsuario: async (req, res) => {
+    const { id } = req.params;
+    const resultado = await usuarioService.listarPostsPorUsuario(id);
+    if (resultado.erro) return res.status(400).json(resultado);
+    return res.status(200).json({
+      message: "Posts do usuário listados com sucesso",
+      posts: resultado,
     });
   },
 };

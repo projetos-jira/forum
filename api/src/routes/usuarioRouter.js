@@ -5,5 +5,6 @@ const router = express.Router();
 router.post("/", usuarioController.cadastrarUsuario);
 router.get("/login", usuarioController.logarUsuario);
 router.put("/:id", usuarioController.atualizarUsuario);
+router.get("/posts/:id", usuarioController.listarPostsPorUsuario);
 
 module.exports = router;
