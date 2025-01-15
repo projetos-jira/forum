@@ -15,6 +15,15 @@ const postController = {
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json(resultado);
   },
+  atualizarPost: async (req, res) => {
+    const { id } = req.params;
+    const { titulo, conteudo } = req.body;
+    const resultado = await postService.atualizarPost(id, titulo, conteudo);
+    if (resultado.erro) return res.status(400).json(resultado);
+    res.status(200).json({
+      message: "Post atualizado com sucesso",
+    });
+  },
 };
 
 module.exports = postController;

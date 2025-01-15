@@ -1,3 +1,4 @@
+const { atualizarPost } = require("../controllers/postController");
 const Post = require("../model/Post");
 
 const postService = {
@@ -21,6 +22,22 @@ const postService = {
       const resultado = await Post.findAll({
         order: [["created_At", "DESC"]],
       });
+      return resultado;
+    } catch (error) {
+      return { erro: error.message };
+    }
+  },
+  atualizarPost: async (id, titulo, conteudo) => {
+    if (!id) return { erro: "Envie o id do post." };
+    if (!titulo && !conteudo && !user_id) {
+      return { erro: "Envie ao menos um campo para atualizar." };
+    }
+    try {
+      const resultado = await Post.update(
+        { titulo, conteudo },
+        { where: { id } }
+      );
+      if (resultado.erro) return { erro: resultado.erro };
       return resultado;
     } catch (error) {
       return { erro: error.message };

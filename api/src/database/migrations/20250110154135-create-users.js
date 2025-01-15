@@ -32,7 +32,7 @@ module.exports = {
         allowNull: true,
       },
       avatar: {
-        type: Sequelize.STRING,
+        type: Sequelize.BLOB("long"),
         allowNull: true,
       },
       created_At: {
