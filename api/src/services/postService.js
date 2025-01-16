@@ -11,13 +11,23 @@ const postService = {
     }
     try {
       const resultado = await Post.create({ titulo, conteudo, user_id });
-      if (!resultado) return { erro: "Erro ao criar post." };
       return resultado;
     } catch (error) {
       return { erro: error.message };
     }
   },
-  listarPosts: async () => {
+  listarPosts: async (filtro) => {
+    let order;
+    switch (filtro) {
+      case "mais-curtidos":
+        order = [["curtidas", "DESC"]];
+        break;
+      case "asc":
+        order = [["created_At", "ASC"]];
+        break;
+      default:
+        order = [["created_At", "DESC"]];
+    }
     try {
       const resultado = await Post.findAll({
         include: {
@@ -25,7 +35,7 @@ const postService = {
           as: "usuario",
           attributes: ["avatar", "apelido"],
         },
-        order: [["created_At", "DESC"]],
+        order: order,
       });
       return resultado;
     } catch (error) {
@@ -37,12 +47,14 @@ const postService = {
     if (!titulo && !conteudo && !user_id) {
       return { erro: "Envie ao menos um campo para atualizar." };
     }
+    if (titulo.length < 3) {
+      return { erro: "O título deve ter no mínimo 3 caracteres." };
+    }
     try {
       const resultado = await Post.update(
         { titulo, conteudo },
         { where: { id } }
       );
-      if (!resultado) return { erro: "Erro ao atualizar post." };
       return resultado;
     } catch (error) {
       return { erro: error.message };
@@ -52,7 +64,6 @@ const postService = {
     if (!id) return { erro: "Envie o id do post." };
     try {
       const resultado = await Post.findByPk(id);
-      if (!resultado) return { erro: "Post não encontrado." };
       return resultado;
     } catch (error) {
       return { erro: error.message };
@@ -62,7 +73,6 @@ const postService = {
     if (!id) return { erro: "Envie o id do post." };
     try {
       const resultado = await Post.findByPk(id);
-      if (!resultado) return { erro: "Post não encontrado." };
       return resultado;
     } catch (error) {
       return { erro: error.message };

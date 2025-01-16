@@ -25,12 +25,17 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
-      created_At: {
+      qtd_curtidas: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      updated_At: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,

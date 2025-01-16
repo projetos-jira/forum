@@ -15,7 +15,8 @@ const postController = {
     });
   },
   listarPosts: async (req, res) => {
-    const resultado = await postService.listarPosts();
+    const { filtro } = req.query;
+    const resultado = await postService.listarPosts(filtro);
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json(resultado);
   },
@@ -24,7 +25,6 @@ const postController = {
     const { titulo, conteudo } = req.body;
 
     const post = await postService.obterUserIdDoPost(id);
-
     if (!post) return res.status(404).json({ erro: "Post não encontrado" });
 
     if (req.userId !== post.user_id)

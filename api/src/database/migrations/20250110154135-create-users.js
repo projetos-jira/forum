@@ -35,12 +35,12 @@ module.exports = {
         type: Sequelize.BLOB("long"),
         allowNull: true,
       },
-      created_At: {
+      created_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      updated_At: {
+      updated_at: {
         type: Sequelize.DATE,
         allowNull: false,
         defaultValue: Sequelize.NOW,
