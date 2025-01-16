@@ -7,5 +7,6 @@ router.post("/", authMiddleware, postController.criarPost);
 router.get("/", postController.listarPosts);
 router.put("/:id", authMiddleware, postController.atualizarPost);
 router.get("/:id", postController.listarPostPorId);
+router.delete("/:id", authMiddleware, postController.deletarPost);
 
 module.exports = router;

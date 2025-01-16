@@ -9,7 +9,7 @@ class Usuario extends Model {
         senha: DataTypes.STRING,
         apelido: DataTypes.STRING,
         profissao: DataTypes.STRING,
-        avatar: DataTypes.STRING,
+        avatar: DataTypes.BLOB("long"),
       },
       {
         sequelize,

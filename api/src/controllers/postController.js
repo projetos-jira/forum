@@ -43,6 +43,22 @@ const postController = {
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json(resultado);
   },
+  deletarPost: async (req, res) => {
+    const { id } = req.params;
+
+    const post = await postService.obterUserIdDoPost(id);
+    if (!post) return res.status(404).json({ erro: "Post não encontrado" });
+
+    if (req.userId !== post.user_id)
+      return res.status(403).json({ erro: "Acesso negado" });
+
+    const resultado = await postService.deletarPost(id);
+    if (resultado.erro) return res.status(400).json(resultado);
+
+    res.status(200).json({
+      message: "Post deletado com sucesso",
+    });
+  },
 };
 
 module.exports = postController;
