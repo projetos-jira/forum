@@ -11,7 +11,7 @@ const postService = {
     }
     try {
       const resultado = await Post.create({ titulo, conteudo, user_id });
-      if (resultado.erro) return { erro: resultado.erro };
+      if (!resultado) return { erro: "Erro ao criar post." };
       return resultado;
     } catch (error) {
       return { erro: error.message };
@@ -20,6 +20,11 @@ const postService = {
   listarPosts: async () => {
     try {
       const resultado = await Post.findAll({
+        include: {
+          model: Usuario,
+          as: "usuario",
+          attributes: ["avatar", "apelido"],
+        },
         order: [["created_At", "DESC"]],
       });
       return resultado;
@@ -37,7 +42,7 @@ const postService = {
         { titulo, conteudo },
         { where: { id } }
       );
-      if (resultado.erro) return { erro: resultado.erro };
+      if (!resultado) return { erro: "Erro ao atualizar post." };
       return resultado;
     } catch (error) {
       return { erro: error.message };

@@ -19,7 +19,7 @@ const usuarioService = {
       const usuarioExiste = await Usuario.findOne({ where: { email } });
       if (usuarioExiste) return { erro: "Email já cadastrado" };
       const resultado = await Usuario.create({ nome, email, senha });
-      if (resultado.erro) return { erro: resultado.erro };
+      if (!resultado) return { erro: "Erro ao cadastrar usuario." };
       return resultado;
     } catch (err) {
       return { erro: err.message };
@@ -53,7 +53,7 @@ const usuarioService = {
         { nome, email, senha, apelido, profissao, avatar },
         { where: { id } }
       );
-      if (resultado.erro) return { erro: resultado.erro };
+      if (!resultado) return { erro: "Erro ao atualizar usuario." };
       return resultado;
     } catch (err) {
       return { erro: err.message };
