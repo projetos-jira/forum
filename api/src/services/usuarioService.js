@@ -1,4 +1,8 @@
+require("dotenv").config();
 const Usuario = require("../model/Usuario");
+const jwt = require("jsonwebtoken");
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 const usuarioService = {
   cadastrarUsuario: async (nome, email, senha) => {
@@ -20,7 +24,11 @@ const usuarioService = {
       if (usuarioExiste) return { erro: "Email já cadastrado" };
       const resultado = await Usuario.create({ nome, email, senha });
       if (!resultado) return { erro: "Erro ao cadastrar usuario." };
-      return resultado;
+
+      const token = jwt.sign({ id: resultado.id }, SECRET_KEY, {
+        expiresIn: 300,
+      });
+      return { resultado, token };
     } catch (err) {
       return { erro: err.message };
     }
@@ -29,9 +37,14 @@ const usuarioService = {
     if (!email || !senha) return { erro: "Envie todos os campos obrigatórios" };
 
     try {
-      const resultado = await Usuario.findOne({ where: { email, senha } });
-      if (!resultado) return { erro: "Usuário não encontrado" };
-      return resultado;
+      const usuario = await Usuario.findOne({ where: { email } });
+      if (!usuario) return { erro: "Usuário não encontrado" };
+
+      const token = jwt.sign({ id: usuario.id }, SECRET_KEY, {
+        expiresIn: "1h",
+      });
+
+      return { usuario, token };
     } catch (err) {
       return { erro: err.message };
     }
