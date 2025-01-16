@@ -1,5 +1,5 @@
-const { atualizarPost } = require("../controllers/postController");
 const Post = require("../model/Post");
+const Usuario = require("../model/Usuario");
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id) => {
