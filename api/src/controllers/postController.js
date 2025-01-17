@@ -7,10 +7,10 @@ const postController = {
     if (resultado.erro) return res.status(400).json(resultado);
 
     if (req.userId !== user_id)
-      return res.status(403).json({ erro: "Acesso negado" });
+      return res.status(403).json({ erro: "Acesso negado." });
 
     res.status(201).json({
-      message: "Post criado com sucesso",
+      message: "Post criado com sucesso.",
       post: resultado,
     });
   },
@@ -25,16 +25,16 @@ const postController = {
     const { titulo, conteudo } = req.body;
 
     const post = await postService.obterUserIdDoPost(id);
-    if (!post) return res.status(404).json({ erro: "Post não encontrado" });
+    if (!post) return res.status(404).json({ erro: "Post não encontrado." });
 
     if (req.userId !== post.user_id)
-      return res.status(403).json({ erro: "Acesso negado" });
+      return res.status(403).json({ erro: "Acesso negado." });
 
     const resultado = await postService.atualizarPost(id, titulo, conteudo);
     if (resultado.erro) return res.status(400).json(resultado);
 
     res.status(200).json({
-      message: "Post atualizado com sucesso",
+      message: "Post atualizado com sucesso.",
     });
   },
   listarPostPorId: async (req, res) => {
@@ -47,16 +47,16 @@ const postController = {
     const { id } = req.params;
 
     const post = await postService.obterUserIdDoPost(id);
-    if (!post) return res.status(404).json({ erro: "Post não encontrado" });
+    if (!post) return res.status(404).json({ erro: "Post não encontrado." });
 
     if (req.userId !== post.user_id)
-      return res.status(403).json({ erro: "Acesso negado" });
+      return res.status(403).json({ erro: "Acesso negado." });
 
     const resultado = await postService.deletarPost(id);
     if (resultado.erro) return res.status(400).json(resultado);
 
     res.status(200).json({
-      message: "Post deletado com sucesso",
+      message: "Post deletado com sucesso.",
     });
   },
 };

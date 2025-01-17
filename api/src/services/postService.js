@@ -35,7 +35,7 @@ const postService = {
           as: "usuario",
           attributes: ["avatar", "apelido"],
         },
-        order: order,
+        order,
       });
       return resultado;
     } catch (error) {
