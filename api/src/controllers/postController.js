@@ -59,6 +59,16 @@ const postController = {
       message: "Post deletado com sucesso.",
     });
   },
+  curtirPost: async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req;
+    const resultado = await postService.curtirPost(id);
+    if (resultado.erro) return res.status(400).json(resultado);
+    res.status(200).json({
+      message: "Post curtido com sucesso.",
+      post: resultado,
+    });
+  },
 };
 
 module.exports = postController;

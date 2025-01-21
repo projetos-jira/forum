@@ -30,6 +30,8 @@ const postService = {
     }
     try {
       const resultado = await Post.findAll({
+        limit: 10,
+
         include: {
           model: Usuario,
           as: "usuario",
@@ -85,6 +87,18 @@ const postService = {
       return resultado;
     } catch (error) {
       return { erro: error.message };
+    }
+  },
+  curtirPost: async (id) => {
+    if (!id) return { erro: "Envie o id do post." };
+    try {
+      const resultado = await Post.findByPk(id);
+      if (!resultado) return { erro: "Post não encontrado." };
+      resultado.qtd_curtidas += 1;
+      await resultado.save();
+      return resultado;
+    } catch (err) {
+      return { erro: err.message };
     }
   },
 };

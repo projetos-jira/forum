@@ -8,5 +8,6 @@ router.get("/", postController.listarPosts);
 router.put("/:id", authMiddleware, postController.atualizarPost);
 router.get("/:id", postController.listarPostPorId);
 router.delete("/:id", authMiddleware, postController.deletarPost);
+router.put("/:id/curtir", authMiddleware, postController.curtirPost);
 
 module.exports = router;

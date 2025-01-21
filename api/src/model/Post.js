@@ -7,6 +7,10 @@ class Post extends Model {
         titulo: DataTypes.STRING,
         conteudo: DataTypes.TEXT,
         user_id: DataTypes.INTEGER,
+        qtd_curtidas: {
+          type: DataTypes.INTEGER,
+          defaultValue: 0,
+        },
       },
       {
         sequelize,

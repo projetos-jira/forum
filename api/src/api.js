@@ -6,7 +6,7 @@ const comentarioRouter = require("./routes/comentarioRouter");
 
 require("./database");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const app = express();
 
 app.use(cors());
@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/usuarios", usuarioRouter);
 app.use("/posts", postRouter);
-app.use("/comentarios", comentarioRouter);
+app.use("/", comentarioRouter);
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta: ${port}`);
