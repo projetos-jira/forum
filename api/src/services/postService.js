@@ -1,4 +1,5 @@
 const Post = require("../model/Post");
+const Curtidas = require("../model/Curtidas");
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id) => {
@@ -85,6 +86,12 @@ const postService = {
   },
   curtirPost: async (id, userId) => {
     try {
+      await Curtidas.create({ post_id: id, user_id: userId });
+      const userJaCurtiu = await Curtidas.findOne({
+        where: { post_id: id, user_id: userId },
+      });
+      if (userJaCurtiu) return { erro: "Usuário já curtiu esse post." };
+
       const post = await Post.findByPk(id);
       if (!post) return { erro: "Post não encontrado." };
 

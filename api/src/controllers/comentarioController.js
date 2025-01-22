@@ -23,7 +23,11 @@ const comentarioController = {
   },
   curtirComentario: async (req, res) => {
     const { comentarioId } = req.params;
-    const resultado = await comentarioService.curtirComentario(comentarioId);
+    const { userId } = req.body;
+    const resultado = await comentarioService.curtirComentario(
+      comentarioId,
+      userId
+    );
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json({
       message: "Comentário curtido com sucesso.",
