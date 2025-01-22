@@ -1,5 +1,6 @@
 const Post = require("../model/Post");
 const Usuario = require("../model/Usuario");
+const Curtidas = require("../model/Curtidas");
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id) => {
@@ -89,14 +90,29 @@ const postService = {
       return { erro: error.message };
     }
   },
-  curtirPost: async (id) => {
+  curtirPost: async (id, userId) => {
     if (!id) return { erro: "Envie o id do post." };
+
     try {
-      const resultado = await Post.findByPk(id);
-      if (!resultado) return { erro: "Post não encontrado." };
-      resultado.qtd_curtidas += 1;
-      await resultado.save();
-      return resultado;
+      const userJaCurtiu = await Curtidas.findOne({
+        where: { post_id: id, user_id: userId },
+      });
+      if (userJaCurtiu) return { erro: "Usuário já curtiu esse post." };
+      await Curtidas.create({
+        post_id: id,
+        user_id: userId,
+      });
+    } catch (err) {
+      return { erro: err.message };
+    }
+
+    try {
+      const post = await Post.findByPk(id);
+
+      if (!post) return { erro: "Post não encontrado." };
+      post.qtd_curtidas += 1;
+      await post.save();
+      return post;
     } catch (err) {
       return { erro: err.message };
     }

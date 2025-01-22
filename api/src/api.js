@@ -6,7 +6,7 @@ const comentarioRouter = require("./routes/comentarioRouter");
 
 require("./database");
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());

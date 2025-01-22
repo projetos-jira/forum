@@ -6,9 +6,6 @@ const postController = {
     const resultado = await postService.criarPost(titulo, conteudo, user_id);
     if (resultado.erro) return res.status(400).json(resultado);
 
-    if (req.userId !== user_id)
-      return res.status(403).json({ erro: "Acesso negado." });
-
     res.status(201).json({
       message: "Post criado com sucesso.",
       post: resultado,
@@ -61,8 +58,9 @@ const postController = {
   },
   curtirPost: async (req, res) => {
     const { id } = req.params;
-    const { userId } = req;
-    const resultado = await postService.curtirPost(id);
+    const { userId } = req.body;
+    console.log(userId);
+    const resultado = await postService.curtirPost(id, userId);
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json({
       message: "Post curtido com sucesso.",
