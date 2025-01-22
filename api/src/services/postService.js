@@ -32,7 +32,14 @@ const postService = {
         order = [["createdAt", "DESC"]];
     }
     try {
-      const posts = await Post.findAll({ order });
+    const resultado = await Post.findAll({
+      include: {
+        model: Usuario,
+        as: "usuario",
+        attributes: ["avatar", "apelido"],
+      },
+        order,
+      });
       return posts;
     } catch (error) {
       return { erro: error.message };
