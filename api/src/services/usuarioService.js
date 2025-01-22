@@ -25,7 +25,7 @@ const usuarioService = {
       const resultado = await Usuario.create({ nome, email, senha });
 
       const token = jwt.sign({ id: resultado.id }, SECRET_KEY, {
-        expiresIn: 300,
+        expiresIn: "1h",
       });
       return { resultado, token };
     } catch (error) {

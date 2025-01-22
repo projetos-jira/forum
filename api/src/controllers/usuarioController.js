@@ -8,7 +8,7 @@ const usuarioController = {
     if (resultado.erro) return res.status(400).json(resultado);
     return res.status(201).json({
       message: "Usuário cadastrado com sucesso.",
-      usuario: resultado.usuario,
+      usuario: resultado.resultado,
       token: resultado.token,
     });
   },
@@ -41,8 +41,10 @@ const usuarioController = {
       avatar
     );
     if (resultado.erro) return res.status(400).json(resultado);
-    return res.status(200).json({
+
+    res.status(200).json({
       message: "Usuário atualizado com sucesso.",
+      usuario: resultado.usuario,
     });
   },
   listarPostsPorUsuario: async (req, res) => {

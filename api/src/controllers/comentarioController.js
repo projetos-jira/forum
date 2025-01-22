@@ -2,13 +2,14 @@ const comentarioService = require("../services/comentarioService");
 
 const comentarioController = {
   criarComentario: async (req, res) => {
-    const { conteudo, post_id, user_id } = req.body;
+    const { conteudo, user_id } = req.body;
+    const { postId } = req.params;
 
     if (!user_id) {
       return res.status(400).json({ erro: "User ID não fornecido" });
     }
     const resultado = await comentarioService.criarComentario(
-      post_id,
+      postId,
       conteudo,
       user_id
     );
@@ -16,8 +17,8 @@ const comentarioController = {
     res.status(201).json(resultado);
   },
   buscarComentarios: async (req, res) => {
-    const { post_id } = req.params;
-    const comentarios = await comentarioService.buscarComentarios(post_id);
+    const { postId } = req.params;
+    const comentarios = await comentarioService.buscarComentarios(postId);
     res.status(200).json(comentarios);
   },
   curtirComentario: async (req, res) => {

@@ -59,7 +59,6 @@ const postController = {
   curtirPost: async (req, res) => {
     const { id } = req.params;
     const { userId } = req.body;
-    console.log(userId);
     const resultado = await postService.curtirPost(id, userId);
     if (resultado.erro) return res.status(400).json(resultado);
     res.status(200).json({
