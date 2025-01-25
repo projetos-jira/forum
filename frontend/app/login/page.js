@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import userService from "../services/userService";
-import { useRouter } from "next/navigation";
+import userService from "../../services/userService";
 
 const theme = createTheme({
   typography: {
@@ -13,17 +12,15 @@ const theme = createTheme({
   },
 });
 
-const Cadastro = () => {
-  const [nome, setNome] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userService.register(nome, email, senha);
-      alert("Usuário cadastrado com sucesso!");
-      router.push("/login");
+      const response = await userService.login(email, senha);
+      alert("Usuário logado com sucesso!");
     } catch (error) {
       alert(error.message);
     }
@@ -42,21 +39,9 @@ const Cadastro = () => {
           }}
         >
           <Typography component="h1" variant="h5">
-            Cadastro
+            Login
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="nome"
-              label="Nome"
-              name="nome"
-              autoComplete="nome"
-              autoFocus
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
             <TextField
               margin="normal"
               required
@@ -65,6 +50,7 @@ const Cadastro = () => {
               label="Email"
               name="email"
               autoComplete="email"
+              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -86,7 +72,7 @@ const Cadastro = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Cadastrar
+              Entrar
             </Button>
           </Box>
         </Box>
@@ -95,4 +81,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default Login;

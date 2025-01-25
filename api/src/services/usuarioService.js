@@ -37,7 +37,8 @@ const usuarioService = {
       return { erro: "Envie todos os campos obrigatórios." };
 
     try {
-      const usuario = await Usuario.findOne({ where: { email } });
+      const usuario = await Usuario.findOne({ where: { email, senha } });
+      if (!usuario) return { erro: "Email ou senha incorretos." };
       const token = jwt.sign({ id: usuario.id }, SECRET_KEY, {
         expiresIn: 300,
       });
