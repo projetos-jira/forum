@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Container, TextField, Button, Typography, Box } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import Link from "next/link";
 import userService from "../../services/userService";
@@ -10,19 +18,34 @@ import { useRouter } from "next/navigation";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(email, senha);
       const response = await userService.login(email, senha);
-      alert("Usuário logado com sucesso!");
-      router.push("/home");
+      setAlertMessage("Usuário logado com sucesso!");
+      setAlertSeverity("success");
+      setOpen(true);
+      setTimeout(() => {
+        router.push("/home");
+      }, 2000);
     } catch (error) {
-      alert(error.message);
+      setAlertMessage(error.message);
+      setAlertSeverity("error");
+      setOpen(true);
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -74,11 +97,28 @@ const Login = () => {
               Entrar
             </Button>
             <Typography variant="body2" align="center">
-              Não possui uma conta? <Link href="/">Faça cadastro</Link>
+              Não possui uma conta?{" "}
+              <Link style={{ color: "blue" }} href="/">
+                Faça cadastro
+              </Link>
             </Typography>
           </Box>
         </Box>
       </Container>
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alertSeverity}
+          sx={{ width: "100%" }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
