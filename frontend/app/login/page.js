@@ -2,32 +2,31 @@
 
 import { useState } from "react";
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import Link from "next/link";
 import userService from "../../services/userService";
-
-const theme = createTheme({
-  typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
-  },
-});
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
+  const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(email, senha);
       const response = await userService.login(email, senha);
       alert("Usuário logado com sucesso!");
+      router.push("/home");
     } catch (error) {
       alert(error.message);
     }
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
       <Container maxWidth="sm">
         <Box
@@ -74,10 +73,13 @@ const Login = () => {
             >
               Entrar
             </Button>
+            <Typography variant="body2" align="center">
+              Não possui uma conta? <Link href="/">Faça cadastro</Link>
+            </Typography>
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+    </>
   );
 };
 

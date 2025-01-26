@@ -2,22 +2,19 @@
 
 import { useState } from "react";
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import Link from "next/link";
+
 import userService from "../services/userService";
 import { useRouter } from "next/navigation";
-
-const theme = createTheme({
-  typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
-  },
-});
 
 const Cadastro = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
   const router = useRouter();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -30,7 +27,7 @@ const Cadastro = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <CssBaseline />
       <Container maxWidth="sm">
         <Box
@@ -88,10 +85,13 @@ const Cadastro = () => {
             >
               Cadastrar
             </Button>
+            <Typography variant="body2" align="center">
+              Já tem uma conta? <Link href="/login">Faça login</Link>
+            </Typography>
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
+    </>
   );
 };
 

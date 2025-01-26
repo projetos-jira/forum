@@ -8,7 +8,7 @@ const userService = {
       const response = await axios.post(API_URL, { nome, email, senha });
       return response.data;
     } catch (error) {
-      return { error: error.response.data.erro || "Erro ao cadastrar usuário" };
+      throw new Error(error.response.data.erro || "Erro ao registrar usuário");
     }
   },
 
