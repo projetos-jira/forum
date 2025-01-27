@@ -1,4 +1,5 @@
 const Post = require("../model/Post");
+const Usuario = require("../model/Usuario");
 const Curtidas = require("../model/Curtidas");
 
 const postService = {
@@ -32,15 +33,15 @@ const postService = {
         order = [["createdAt", "DESC"]];
     }
     try {
-    const resultado = await Post.findAll({
-      include: {
-        model: Usuario,
-        as: "usuario",
-        attributes: ["avatar", "apelido"],
-      },
+      const resultado = await Post.findAll({
+        include: {
+          model: Usuario,
+          as: "usuario",
+          attributes: ["avatar", "apelido"],
+        },
         order,
       });
-      return posts;
+      return resultado;
     } catch (error) {
       return { erro: error.message };
     }
@@ -93,11 +94,11 @@ const postService = {
   },
   curtirPost: async (id, userId) => {
     try {
-      await Curtidas.create({ post_id: id, user_id: userId });
       const userJaCurtiu = await Curtidas.findOne({
         where: { post_id: id, user_id: userId },
       });
-      if (userJaCurtiu) return { erro: "Usuário já curtiu esse post." };
+      if (userJaCurtiu) return { erro: "Usuário já curtiu o post." };
+      await Curtidas.create({ post_id: id, user_id: userId });
 
       const post = await Post.findByPk(id);
       if (!post) return { erro: "Post não encontrado." };
