@@ -28,6 +28,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await userService.login(email, senha);
+
+      localStorage.setItem("user", JSON.stringify(response));
       setAlertMessage("Usuário logado com sucesso!");
       setAlertSeverity("success");
       setOpen(true);
@@ -60,7 +62,7 @@ const Login = () => {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Login
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -92,7 +94,7 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
             >
               Entrar
             </Button>

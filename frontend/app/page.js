@@ -28,7 +28,7 @@ const Cadastro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await userService.register(nome, email, senha);
+      const resultado = await userService.register(nome, email, senha);
       setAlertMessage("Usuário cadastrado com sucesso!");
       setAlertSeverity("success");
       setOpen(true);
@@ -61,7 +61,7 @@ const Cadastro = () => {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h4">
             Cadastro
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -104,7 +104,7 @@ const Cadastro = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
             >
               Cadastrar
             </Button>

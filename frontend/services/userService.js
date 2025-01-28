@@ -14,9 +14,7 @@ const userService = {
 
   login: async (email, senha) => {
     try {
-      const response = await axios.get(`${API_URL}/login`, {
-        params: { email, senha },
-      });
+      const response = await axios.post(`${API_URL}/login`, { email, senha });
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.erro || "Erro ao logar usuário");

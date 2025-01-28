@@ -18,8 +18,9 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-roboto), sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
