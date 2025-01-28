@@ -37,7 +37,15 @@ const MaisCurtidos = () => {
       {posts.map((post) => (
         <Card
           key={post.id}
-          sx={{ marginBottom: 2, backgroundColor: "#232328", borderRadius: 4 }}
+          sx={{
+            marginBottom: 2,
+            backgroundColor: "#232328",
+            borderRadius: 4,
+            transition: "transform 0.3s",
+            "&:hover": {
+              transform: "scale(1.05)",
+            },
+          }}
         >
           <CardContent className="card-content">
             <Box>

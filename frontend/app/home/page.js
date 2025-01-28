@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import PostsMaisCurtidos from "../../components/PostsMaisCurtidos";
 import Timeline from "../../components/TimeLine";
 import AddPostButton from "../../components/AddPostButton";
+import Footer from "../../components/Footer";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -24,6 +25,7 @@ const Home = () => {
 
   return (
     <>
+      <Header />
       <Box
         className="container"
         sx={{
@@ -51,6 +53,7 @@ const Home = () => {
           <AddPostButton />
         </Box>
       </Box>
+      <Footer />
     </>
   );
 };

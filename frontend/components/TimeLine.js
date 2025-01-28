@@ -22,7 +22,11 @@ const Timeline = () => {
 
   return (
     <>
-      <Box>
+      <Box
+        sx={{
+          mt: 6,
+        }}
+      >
         {error && <Typography color="error">{error}</Typography>}
         {posts.map((post) => (
           <Card
@@ -32,7 +36,11 @@ const Timeline = () => {
               backgroundColor: "#2f2f34",
               borderRadius: 8,
               ml: 6,
-              mt: 6,
+              mb: 6,
+              transition: "transform 0.3s",
+              "&:hover": {
+                transform: "scale(1.05)",
+              },
             }}
           >
             <CardContent

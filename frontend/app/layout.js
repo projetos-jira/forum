@@ -1,5 +1,6 @@
 import "./globals.css";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export const metadata = {
   title: "Forum",
@@ -9,9 +10,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Header />
-        {children}
+      <body
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+        }}
+      >
+        <main style={{ flex: 1 }}>{children}</main>
       </body>
     </html>
   );

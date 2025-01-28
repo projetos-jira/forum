@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, InputBase, Typography, IconButton } from "@mui/material";
+import { Box, InputBase, Typography, Button, Link } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 
@@ -41,9 +40,15 @@ const Header = () => {
           width: "60px",
           backgroundColor: "rgba(47, 47, 52, 1)",
           marginLeft: "100px",
+          transition: "transform 0.3s",
+          "&:hover": {
+            transform: "scale(1.05)",
+          },
         }}
       >
-        <HomeIcon sx={{ color: "#fff", fontSize: "30px" }} />
+        <Link href="/home">
+          <HomeIcon sx={{ color: "#fff", fontSize: "30px" }} />
+        </Link>
       </Box>
       <Box
         sx={{
@@ -111,9 +116,15 @@ const Header = () => {
           width: "60px",
           backgroundColor: "rgba(47, 47, 52, 1)",
           marginRight: "10px",
+          transition: "transform 0.3s",
+          "&:hover": {
+            transform: "scale(1.05)",
+          },
         }}
       >
-        <PersonIcon sx={{ color: "#fff", fontSize: "30px" }} />
+        <Link href="/profile">
+          <PersonIcon sx={{ color: "#fff", fontSize: "30px" }} />
+        </Link>
       </Box>
       <Typography
         variant="subtitle1"
