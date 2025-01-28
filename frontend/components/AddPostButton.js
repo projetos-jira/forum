@@ -7,7 +7,7 @@ const AddPostButton = () => {
     <Box
       sx={{
         position: "fixed",
-        bottom: 20,
+        bottom: 30,
         right: 20,
       }}
     >

@@ -1,27 +1,54 @@
 import React from "react";
-import { InputBase, IconButton } from "@mui/material";
+import { useState, useEffect } from "react";
+import { InputBase, Avatar, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HomeIcon from "@mui/icons-material/Home";
+import PersonIcon from "@mui/icons-material/Person";
 import "../styles/header.css";
 
 const Header = () => {
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserName(user.usuario.nome.split(" ")[0]);
+    }
+  }, []);
+
   return (
     <header className="header">
+      <div className="home-icon-wrapper">
+        <HomeIcon
+          className="home-icon"
+          style={{ color: "#fff", fontSize: "30px" }}
+        />
+      </div>
       <div className="search-container">
         <div className="search">
+          <InputBase
+            placeholder="Pesquisar…"
+            className="input-base"
+            style={{ color: "#fff" }}
+          />
           <div className="search-icon-wrapper">
             <SearchIcon className="search-icon" />
           </div>
-          <InputBase placeholder="Pesquisar…" className="input-base" />
         </div>
       </div>
-      <IconButton
-        edge="end"
-        color="inherit"
-        aria-label="account of current user"
+      <div className="avatar-icon-wrapper">
+        <PersonIcon
+          className="person-icon"
+          style={{ color: "#fff", fontSize: "30px" }}
+        />
+      </div>
+      <Typography
+        variant="subtitle1"
+        style={{ color: "#fff", marginRight: "100px" }}
       >
-        <AccountCircleIcon fontSize="large" className="profile-icon" />
-      </IconButton>
+        Olá, <strong>{userName}</strong>
+      </Typography>
     </header>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
 import postService from "../services/postService";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Timeline = () => {
   const [posts, setPosts] = useState([]);
@@ -21,23 +22,76 @@ const Timeline = () => {
 
   return (
     <>
-      {error && <Typography color="error">{error}</Typography>}
-      {posts.map((post) => (
-        <Card key={post.id} sx={{ marginBottom: 2 }}>
-          <CardContent>
-            <Typography variant="subtitle2" color="textSecondary">
-              {post.usuario.apelido}
-            </Typography>
-            <Typography variant="h5">{post.titulo}</Typography>
-            <Typography variant="body2" color="textSecondary">
-              {post.conteudo}
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              Curtidas: {post.qtd_curtidas}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
+      <Box>
+        {error && <Typography color="error">{error}</Typography>}
+        {posts.map((post) => (
+          <Card
+            key={post.id}
+            sx={{
+              marginBottom: 2,
+              backgroundColor: "#2f2f34",
+              borderRadius: 8,
+              ml: 6,
+              mt: 6,
+            }}
+          >
+            <CardContent
+              className="card-content"
+              sx={{
+                backgroundColor: "#2f2f34",
+                minHeight: 300,
+                padding: 6,
+                color: "#fff",
+              }}
+            >
+              <Box
+                display="flex"
+                alignItems="center"
+                sx={{
+                  mb: 2,
+                }}
+              >
+                <Avatar
+                  src={`http://localhost:3000/usuarios/${post.usuario.id}/avatar`}
+                  alt={post.usuario.apelido}
+                  sx={{
+                    marginRight: 1,
+                    color: "#2f2f34",
+                    height: 50,
+                    width: 50,
+                  }}
+                />
+                <Typography variant="subtitle1">
+                  @{post.usuario.apelido}
+                </Typography>
+              </Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  mb: 2,
+                  fontWeight: "bold",
+                }}
+              >
+                {post.titulo}
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "light",
+                }}
+              >
+                {post.conteudo}
+              </Typography>
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <FavoriteIcon sx={{ mt: 3 }} />
+                <Typography variant="h6" sx={{ ml: 2, mt: 2.5 }}>
+                  {post.qtd_curtidas}
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
     </>
   );
 };

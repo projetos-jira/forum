@@ -1,24 +1,14 @@
 .container {
   display: flex;
-  margin-top: 16px;
-  height: calc(100vh - 86px);
+  margin: 0 auto;
+  margin-bottom: 30px;
 }
 
 .left-column {
-  display: flex;
-  flex-direction: column;
   width: 20%;
   height: 70vh;
-  background-color: #333;
-  margin: 16px 0 16px 16px;
-  padding: 20px;
-  border-radius: 8px;
 }
 
 .center-column {
-  padding: 20px;
-  border-radius: 8px;
-  width: 70%;
-  margin: 16px;
-  background-color: #333;
+  width: 50%;
 }
