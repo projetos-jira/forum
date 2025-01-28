@@ -1,4 +1,5 @@
 import "./globals.css";
+import Header from "../components/Header";
 
 export const metadata = {
   title: "Forum",
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ backgroundColor: "#232328" }}>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

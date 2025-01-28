@@ -64,7 +64,7 @@ const Cadastro = () => {
           <Typography component="h1" variant="h4">
             Cadastro
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" onSubmit={handleSubmit}>
             <TextField
               margin="normal"
               required

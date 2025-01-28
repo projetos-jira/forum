@@ -1,6 +1,5 @@
 import React from "react";
-import "../styles/addPostButton.css";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 const AddPostButton = () => {
   return (
@@ -11,7 +10,18 @@ const AddPostButton = () => {
         right: 20,
       }}
     >
-      <button className="add-post-button">+</button>
+      <Button
+        sx={{
+          backgroundColor: "#2f2f34",
+          color: "#fff",
+          borderRadius: 100,
+          width: 60,
+          height: 60,
+          fontSize: 40,
+        }}
+      >
+        +
+      </Button>
     </Box>
   );
 };

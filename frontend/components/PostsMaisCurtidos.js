@@ -17,7 +17,6 @@ const MaisCurtidos = () => {
         setError(error.message);
       }
     };
-
     fetchPosts();
   }, []);
 
@@ -41,15 +40,27 @@ const MaisCurtidos = () => {
           sx={{ marginBottom: 2, backgroundColor: "#232328", borderRadius: 4 }}
         >
           <CardContent className="card-content">
-            <Typography
-              variant="h6"
-              sx={{
-                textAlign: "center",
-                color: "#fff",
-              }}
-            >
-              {post.titulo}
-            </Typography>
+            <Box>
+              <Typography
+                variant="h6"
+                sx={{
+                  textAlign: "center",
+                  color: "#fff",
+                }}
+              >
+                {post.titulo}
+                <FavoriteIcon
+                  sx={{
+                    color: "#fff",
+                    position: "relative",
+                    top: 6,
+                    ml: 1,
+                    mr: 1,
+                  }}
+                />
+                {post.qtd_curtidas}
+              </Typography>
+            </Box>
           </CardContent>
         </Card>
       ))}

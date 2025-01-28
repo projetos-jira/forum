@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container, Box } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
+import { Box } from "@mui/material";
+
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header";
 import PostsMaisCurtidos from "../../components/PostsMaisCurtidos";
 import Timeline from "../../components/TimeLine";
 import AddPostButton from "../../components/AddPostButton";
-import "../../styles/home.css";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -25,13 +24,27 @@ const Home = () => {
 
   return (
     <>
-      <CssBaseline />
-      <Header />
-      <Box className="container">
-        <Box className="left-column">
+      <Box
+        className="container"
+        sx={{
+          display: "flex",
+          margin: "0 auto",
+          backgroundColor: "#232328",
+        }}
+      >
+        <Box
+          sx={{
+            width: "20%",
+            height: "70vh",
+          }}
+        >
           <PostsMaisCurtidos />
         </Box>
-        <Box className="center-column">
+        <Box
+          sx={{
+            width: "50%",
+          }}
+        >
           <Timeline />
         </Box>
         <Box>
