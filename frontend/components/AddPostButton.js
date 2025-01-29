@@ -7,7 +7,11 @@ const AddPostButton = () => {
       sx={{
         position: "fixed",
         bottom: 20,
-        right: 20,
+        right: 40,
+        transition: "transform 0.3s",
+        "&:hover": {
+          transform: "scale(1.05)",
+        },
       }}
     >
       <Button
