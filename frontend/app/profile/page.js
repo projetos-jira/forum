@@ -1,11 +1,23 @@
 "use client";
 import { useState } from "react";
+import { Box, Typography } from "@mui/material";
+import Header from "../../components/Layout/Header";
+import Footer from "../../components/Layout/Footer";
 
 const Profile = () => {
   return (
-    <div>
-      <h1>Profile</h1>
-    </div>
+    <Box component="main">
+      <Header />
+      <Box
+        sx={{
+          display: "flex",
+
+          backgroundColor: "#232328",
+        }}
+      ></Box>
+
+      <Footer />
+    </Box>
   );
 };
 

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useRouter } from "next/navigation";
-import Header from "../../components/Header";
-import PostsMaisCurtidos from "../../components/PostsMaisCurtidos";
-import Timeline from "../../components/TimeLine";
-import AddPostButton from "../../components/AddPostButton";
-import Footer from "../../components/Footer";
+import Header from "../../components/Layout/Header";
+import PostsMaisCurtidos from "../../components/Posts/PostsMaisCurtidos";
+import Timeline from "../../components/Posts/TimeLine";
+import AddPostButton from "../../components/Buttons/AddPostButton";
+import Footer from "../../components/Layout/Footer";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -23,8 +23,8 @@ const Home = () => {
   }, []);
 
   return (
-    <>
-      <Header />
+    <Box component="main">
+      <Header searchInput={true} />
       <Box
         sx={{
           display: "flex",
@@ -36,7 +36,7 @@ const Home = () => {
         <AddPostButton />
       </Box>
       <Footer />
-    </>
+    </Box>
   );
 };
 

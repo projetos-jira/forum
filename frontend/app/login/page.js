@@ -51,62 +51,59 @@ const Login = () => {
   };
 
   return (
-    <>
-      <CssBaseline />
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography component="h1" variant="h4">
-            Login
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h4">
+          Login
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="senha"
+            label="Senha"
+            type="password"
+            id="senha"
+            autoComplete="current-password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
+          >
+            Entrar
+          </Button>
+          <Typography variant="body2" align="center">
+            Não possui uma conta?{" "}
+            <Link style={{ color: "blue" }} href="/">
+              Faça cadastro
+            </Link>
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="senha"
-              label="Senha"
-              type="password"
-              id="senha"
-              autoComplete="current-password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
-            >
-              Entrar
-            </Button>
-            <Typography variant="body2" align="center">
-              Não possui uma conta?{" "}
-              <Link style={{ color: "blue" }} href="/">
-                Faça cadastro
-              </Link>
-            </Typography>
-          </Box>
         </Box>
-      </Container>
+      </Box>
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -121,7 +118,7 @@ const Login = () => {
           {alertMessage}
         </Alert>
       </Snackbar>
-    </>
+    </Container>
   );
 };
 

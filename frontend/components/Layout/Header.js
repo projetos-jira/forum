@@ -6,7 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 
-const Header = () => {
+const Header = ({ searchInput }) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -80,30 +80,34 @@ const Header = () => {
               justifyContent: "center",
               marginRight: "50px",
             }}
-          >
-            <SearchIcon
-              sx={{
-                color: "#fff",
-                position: "absolute",
-                left: "16px",
-                pointerEvents: "none",
-                zIndex: 1,
-              }}
-            />
-          </Box>
-          <InputBase
-            placeholder="Pesquisar…"
-            sx={{
-              padding: "12px",
-              paddingLeft: "50px",
-              transition: "width 300ms",
-              width: "100%",
-              color: "#fff",
-              backgroundColor: "#2f2f34",
-              fontSize: "16px",
-              zIndex: 0,
-            }}
-          />
+          ></Box>
+
+          {searchInput && (
+            <>
+              <SearchIcon
+                sx={{
+                  color: "#fff",
+                  position: "absolute",
+                  left: "16px",
+                  pointerEvents: "none",
+                  zIndex: 1,
+                }}
+              />
+              <InputBase
+                placeholder="Pesquisar…"
+                sx={{
+                  padding: "12px",
+                  paddingLeft: "50px",
+                  transition: "width 300ms",
+                  width: "100%",
+                  color: "#fff",
+                  backgroundColor: "#2f2f34",
+                  fontSize: "16px",
+                  zIndex: 0,
+                }}
+              />
+            </>
+          )}
         </Box>
       </Box>
       <Box

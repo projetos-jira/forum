@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
-import postService from "../services/postService";
+import postService from "../../services/postService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import postsSkeleton from "./Skeletons/PostsSkeleton";
+import postsSkeleton from "../Skeletons/PostsSkeleton";
 
 const Timeline = ({ width }) => {
   const [posts, setPosts] = useState([]);

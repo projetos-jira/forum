@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Card, CardContent } from "@mui/material";
-import postService from "../services/postService";
+import postService from "../../services/postService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import PostsMaisCurtidosSkeleton from "./Skeletons/PostsMaisCurtidosSkeleton";
+import PostsMaisCurtidosSkeleton from "../Skeletons/PostsMaisCurtidosSkeleton";
 
 const MaisCurtidos = () => {
   const [posts, setPosts] = useState([]);

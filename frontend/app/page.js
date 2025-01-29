@@ -50,73 +50,70 @@ const Cadastro = () => {
   };
 
   return (
-    <>
-      <CssBaseline />
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography component="h1" variant="h4">
-            Cadastro
+    <Container component="main" maxWidth="sm">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Typography component="h1" variant="h4">
+          Cadastro
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="nome"
+            label="Nome"
+            name="nome"
+            autoComplete="nome"
+            autoFocus
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="senha"
+            label="Senha"
+            type="password"
+            id="senha"
+            autoComplete="current-password"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
+          >
+            Cadastrar
+          </Button>
+          <Typography variant="body2" align="center">
+            Já tem uma conta?{" "}
+            <Link style={{ color: "blue" }} href="/login">
+              Faça login
+            </Link>
           </Typography>
-          <Box component="form" onSubmit={handleSubmit}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="nome"
-              label="Nome"
-              name="nome"
-              autoComplete="nome"
-              autoFocus
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="senha"
-              label="Senha"
-              type="password"
-              id="senha"
-              autoComplete="current-password"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
-            >
-              Cadastrar
-            </Button>
-            <Typography variant="body2" align="center">
-              Já tem uma conta?{" "}
-              <Link style={{ color: "blue" }} href="/login">
-                Faça login
-              </Link>
-            </Typography>
-          </Box>
         </Box>
-      </Container>
+      </Box>
       <Snackbar
         open={open}
         autoHideDuration={3000}
@@ -131,7 +128,7 @@ const Cadastro = () => {
           {alertMessage}
         </Alert>
       </Snackbar>
-    </>
+    </Container>
   );
 };
 
