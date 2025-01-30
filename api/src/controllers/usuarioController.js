@@ -29,7 +29,7 @@ const usuarioController = {
   },
   atualizarUsuario: async (req, res) => {
     const { id } = req.params;
-    const { nome, email, senha, apelido, profissao, avatar } = req.body;
+    const { nome, email, senha, apelido, profissao } = req.body;
 
     if (req.userId !== parseInt(id)) {
       return res.status(403).json({ erro: "Acesso negado." });
@@ -41,8 +41,7 @@ const usuarioController = {
       email,
       senha,
       apelido,
-      profissao,
-      avatar
+      profissao
     );
     if (resultado.erro) return res.status(400).json(resultado);
 

@@ -49,7 +49,6 @@ const usuarioService = {
     try {
       const usuario = await Usuario.findOne({ where: { email } });
       if (!usuario) return { erro: "Email ou senha incorretos." };
-      console.log(senha, usuario.senha);
       const senhaValida = await bcrypt.compare(senha, usuario.senha);
       if (!senhaValida) return { erro: "Email ou senha incorretos." };
 
@@ -62,17 +61,9 @@ const usuarioService = {
       return { erro: error.message };
     }
   },
-  atualizarUsuario: async (
-    id,
-    nome,
-    email,
-    senha,
-    apelido,
-    profissao,
-    avatar
-  ) => {
+  atualizarUsuario: async (id, nome, email, senha, apelido, profissao) => {
     if (!id) return { erro: "Envie o id do usuário." };
-    if (!nome && !email && !senha && !apelido && !profissao && !avatar)
+    if (!nome && !email && !senha && !apelido && !profissao)
       return { erro: "Envie ao menos um campo para atualizar." };
 
     if (senha && senha.length < 6)
@@ -86,10 +77,27 @@ const usuarioService = {
     if (email && !emailRegex.test(email)) return { erro: "Email inválido." };
 
     try {
-      const usuarioExiste = await Usuario.findOne({ where: { email } });
-      if (usuarioExiste) return { erro: "Email já cadastrado." };
+      const user = await Usuario.findByPk(id);
+      if (!user) return { erro: "Usuário não encontrado." };
 
-      const updateData = { nome, email, apelido, profissao, avatar };
+      if (
+        nome === user.nome &&
+        email === user.email &&
+        apelido === user.apelido &&
+        profissao === user.profissao
+      )
+        return { erro: "Nenhum dado foi alterado." };
+
+      if (email !== user.email) {
+        const emailExits = await Usuario.findOne({ where: { email } });
+        if (emailExits) return { erro: "Email já cadastrado." };
+      }
+
+      const apelidoExiste = await Usuario.findOne({ where: { apelido } });
+      if (apelidoExiste && apelido != user.apelido)
+        return { erro: "Apelido já cadastrado." };
+
+      const updateData = { nome, email, apelido, profissao };
       if (senha) {
         updateData.senha = await bcrypt.hash(senha, 10);
       }
