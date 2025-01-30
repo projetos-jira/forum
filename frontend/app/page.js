@@ -140,7 +140,7 @@ const Cadastro = () => {
             label="Senha"
             type="password"
             id="senha"
-            autoComplete="current-password"
+            autoComplete="password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
             variant="filled"
@@ -150,6 +150,7 @@ const Cadastro = () => {
             type="submit"
             fullWidth
             variant="contained"
+            size="large"
             sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
           >
             Entrar

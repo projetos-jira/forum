@@ -66,20 +66,10 @@ const ProfileContent = () => {
       />
       <Typography variant="h6">{user.nome}</Typography>
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          padding: "0 20%",
-        }}
-      ></Box>
-      <Box
         component="form"
         sx={{
           width: "100%",
-          maxWidth: 400,
-          display: "flex",
-          flexDirection: "column",
+          width: 500,
         }}
       >
         <TextField
@@ -91,7 +81,6 @@ const ProfileContent = () => {
           label="Nome"
           name="nome"
           autoComplete="nome"
-          autoFocus
           value={nome}
           onChange={(e) => setNome(e.target.value)}
           className={classes.textField}
@@ -153,6 +142,7 @@ const ProfileContent = () => {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
+          size="large"
         >
           Atualizar
         </Button>

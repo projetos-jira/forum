@@ -24,7 +24,6 @@ const Header = ({ searchInput }) => {
         backgroundColor: "#232328",
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-around",
         padding: "0 16px",
         height: "150px",
         borderBottom: "1px solid #2f2f34",
@@ -65,8 +64,7 @@ const Header = ({ searchInput }) => {
             backgroundColor: "rgba(0, 0, 0, 0.05)",
             display: "flex",
             alignItems: "center",
-            width: "50%",
-            maxWidth: "600px",
+            width: "60%",
           }}
         >
           <Box

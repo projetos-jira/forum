@@ -77,7 +77,22 @@ const MaisCurtidos = () => {
         Posts Mais Curtidos
       </Typography>
       {error && <Typography color="error">{error}</Typography>}
-      {loading ? loadingPosts() : renderedPosts}
+      {loading ? (
+        loadingPosts()
+      ) : posts.length === 0 ? (
+        <Typography
+          variant="h4"
+          sx={{
+            textAlign: "center",
+            m: 6,
+            color: "#fff",
+          }}
+        >
+          Nenhum post encontrado 👎.
+        </Typography>
+      ) : (
+        renderedPosts
+      )}
     </Box>
   );
 
