@@ -36,30 +36,48 @@ const useStyles = makeStyles({
 
 const Cadastro = () => {
   const classes = useStyles();
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [apelido, setApelido] = useState("");
-  const [senha, setSenha] = useState("");
-  const [open, setOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("");
+  const [formulario, setFormulario] = useState({
+    nome: "",
+    email: "",
+    apelido: "",
+    senha: "",
+  });
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+    open: false,
+  });
 
   const router = useRouter();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormulario((prevFormulario) => ({
+      ...prevFormulario,
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const { nome, email, apelido, senha } = formulario;
       const resultado = await userService.register(nome, email, senha, apelido);
-      setAlertMessage(resultado.message);
-      setAlertSeverity("success");
-      setOpen(true);
+      setAlert({
+        message: resultado.message,
+        severity: "success",
+        open: true,
+      });
+
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error) {
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
-      setOpen(true);
+      setAlert({
+        message: error.message,
+        severity: "error",
+        open: true,
+      });
     }
   };
 
@@ -67,7 +85,7 @@ const Cadastro = () => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setAlert({ ...alert, open: false });
   };
 
   return (
@@ -99,8 +117,8 @@ const Cadastro = () => {
             name="nome"
             autoComplete="nome"
             autoFocus
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            value={formulario.nome}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -112,8 +130,8 @@ const Cadastro = () => {
             label="Email"
             name="email"
             autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formulario.email}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -126,8 +144,8 @@ const Cadastro = () => {
             name="apelido"
             autoComplete="apelido"
             autoFocus
-            value={apelido}
-            onChange={(e) => setApelido(e.target.value)}
+            value={formulario.apelido}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -141,8 +159,8 @@ const Cadastro = () => {
             type="password"
             id="senha"
             autoComplete="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={formulario.senha}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -171,10 +189,10 @@ const Cadastro = () => {
       >
         <Alert
           onClose={handleClose}
-          severity={alertSeverity}
+          severity={alert.severity}
           sx={{ width: "100%" }}
         >
-          {alertMessage}
+          {alert.message}
         </Alert>
       </Snackbar>
     </>

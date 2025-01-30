@@ -9,14 +9,10 @@ const Timeline = ({ width, fetchPosts }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
 
-  !width && (width = "100%");
-
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUser(user.usuario);
-    }
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const user = storedUser;
+    setUser(user.usuario);
   }, []);
 
   useEffect(() => {

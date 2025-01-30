@@ -10,11 +10,9 @@ const Header = ({ searchInput }) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUserName(user.usuario?.apelido || user.usuario?.nome);
-    }
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const user = storedUser.usuario;
+    setUserName(user.apelido);
   }, []);
 
   return (
@@ -132,7 +130,7 @@ const Header = ({ searchInput }) => {
         variant="subtitle1"
         sx={{ color: "#fff", marginRight: "100px" }}
       >
-        Olá, <strong>{`@${userName}` || "Convidado"}</strong>
+        Olá, <strong>{`@${userName}`}</strong>
       </Typography>
     </Box>
   );

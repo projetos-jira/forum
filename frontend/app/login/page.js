@@ -36,37 +36,67 @@ const useStyles = makeStyles({
 
 const Login = () => {
   const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
-  const [open, setOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("success");
+  const [formulario, setFormulario] = useState({
+    email: "",
+    senha: "",
+  });
+
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+    open: false,
+  });
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userService.login(email, senha);
-      localStorage.setItem("user", JSON.stringify(response));
-      setAlertMessage(response.message);
-      setAlertSeverity("success");
-      setOpen(true);
+      const response = await userService.login(
+        formulario.email,
+        formulario.senha
+      );
+      const userData = {
+        token: response.token,
+        usuario: {
+          id: response.usuario.id,
+          nome: response.usuario.nome,
+          email: response.usuario.email,
+          apelido: response.usuario.apelido,
+          profissao: response.usuario.profissao,
+        },
+      };
+      localStorage.setItem("user", JSON.stringify(userData));
+      setAlert({
+        message: response.message,
+        severity: "success",
+        open: true,
+      });
       setTimeout(() => {
         router.push("/home");
       }, 2000);
     } catch (error) {
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
-      setOpen(true);
+      setAlert({
+        message: error.message,
+        severity: "error",
+        open: true,
+      });
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormulario((prevFormulario) => ({
+      ...prevFormulario,
+      [name]: value,
+    }));
   };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setAlert({ ...alert, open: false });
   };
 
   return (
@@ -98,8 +128,8 @@ const Login = () => {
             name="email"
             autoComplete="email"
             autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formulario.email}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -112,8 +142,8 @@ const Login = () => {
             type="password"
             id="senha"
             autoComplete="current-password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={formulario.senha}
+            onChange={handleChange}
             variant="filled"
             className={classes.textField}
           />
@@ -142,10 +172,10 @@ const Login = () => {
       >
         <Alert
           onClose={handleClose}
-          severity={alertSeverity}
+          severity={alert.severity}
           sx={{ width: "100%" }}
         >
-          {alertMessage}
+          {alert.message}
         </Alert>
       </Snackbar>
     </>

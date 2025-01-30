@@ -26,11 +26,11 @@ const userService = {
     }
   },
 
-  update: async (id, nome, email, senha, apelido, profissao, avatar, token) => {
+  update: async (id, nome, email, senha, apelido, profissao, token) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}`,
-        { nome, email, senha, apelido, profissao, avatar },
+        { nome, email, senha, apelido, profissao },
         {
           headers: {
             Authorization: `Bearer ${token}`,
