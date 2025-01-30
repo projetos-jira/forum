@@ -17,6 +17,9 @@ const usuarioService = {
 
     if (!emailRegex.test(email)) return { erro: "Email inválido." };
 
+    if (apelido.length < 3)
+      return { erro: "O apelido deve ter no mínimo 3 caracteres." };
+
     if (senha.length < 6)
       return { erro: "A senha deve ter no mínimo 6 caracteres." };
 
@@ -66,15 +69,18 @@ const usuarioService = {
     if (!nome && !email && !senha && !apelido && !profissao)
       return { erro: "Envie ao menos um campo para atualizar." };
 
-    if (senha && senha.length < 6)
-      return { erro: "A senha deve ter no mínimo 6 caracteres." };
-
     if (nome && nome.length < 3)
       return { erro: "O nome deve ter no mínimo 3 caracteres." };
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (email && !emailRegex.test(email)) return { erro: "Email inválido." };
+
+    if (apelido.length < 3)
+      return { erro: "O apelido deve ter no mínimo 3 caracteres." };
+
+    if (senha && senha.length < 6)
+      return { erro: "A senha deve ter no mínimo 6 caracteres." };
 
     try {
       const user = await Usuario.findByPk(id);
