@@ -1,7 +1,10 @@
 const express = require("express");
 const usuarioController = require("../controllers/usuarioController");
 const authMiddleware = require("../middlewares/authMiddleware");
+const multer = require("multer");
 const router = express.Router();
+
+const upload = multer();
 
 /**
  * @swagger
@@ -64,7 +67,7 @@ router.post("/", usuarioController.cadastrarUsuario);
  *       400:
  *         description: Erro na requisição
  */
-router.get("/login", usuarioController.logarUsuario);
+router.post("/login", usuarioController.logarUsuario);
 
 /**
  * @swagger
@@ -137,6 +140,12 @@ router.get(
   "/posts/:id",
   authMiddleware,
   usuarioController.listarPostsPorUsuario
+);
+
+router.put(
+  "/:id/avatar",
+  upload.single("avatar"),
+  usuarioController.uploadAvatar
 );
 
 module.exports = router;

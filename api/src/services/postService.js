@@ -19,9 +19,11 @@ const postService = {
   },
   listarPosts: async (filtro) => {
     let order;
+    let limit = 10;
     switch (filtro) {
       case "mais-curtidos":
         order = [["qtd_curtidas", "DESC"]];
+        limit = 5;
         break;
       case "asc":
         order = [["createdAt", "ASC"]];
@@ -40,6 +42,7 @@ const postService = {
           attributes: ["avatar", "apelido"],
         },
         order,
+        limit,
       });
       return resultado;
     } catch (error) {
@@ -94,14 +97,15 @@ const postService = {
   },
   curtirPost: async (id, userId) => {
     try {
+      const post = await Post.findByPk(id);
+      if (!post) return { erro: "Post não encontrado." };
+
       const userJaCurtiu = await Curtidas.findOne({
         where: { post_id: id, user_id: userId },
       });
       if (userJaCurtiu) return { erro: "Usuário já curtiu o post." };
-      await Curtidas.create({ post_id: id, user_id: userId });
 
-      const post = await Post.findByPk(id);
-      if (!post) return { erro: "Post não encontrado." };
+      await Curtidas.create({ post_id: id, user_id: userId });
 
       post.qtd_curtidas += 1;
       await post.save();

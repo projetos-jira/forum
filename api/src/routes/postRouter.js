@@ -39,7 +39,7 @@ const router = express.Router();
  *       400:
  *         description: Erro na requisição
  */
-router.post("/", postController.criarPost);
+router.post("/", authMiddleware, postController.criarPost);
 
 /**
  * @swagger
@@ -143,7 +143,7 @@ router.put("/:id", authMiddleware, postController.atualizarPost);
  *       404:
  *         description: Post não encontrado
  */
-router.get("/:id", postController.listarPostPorId);
+router.get("/:id", authMiddleware, postController.listarPostPorId);
 
 /**
  * @swagger
@@ -197,6 +197,6 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  *       400:
  *         description: Erro na requisição
  */
-router.put("/:id/curtir", postController.curtirPost);
+router.put("/:id/curtir", authMiddleware, postController.curtirPost);
 
 module.exports = router;

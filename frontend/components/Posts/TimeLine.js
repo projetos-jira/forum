@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
-import postService from "../../services/postService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import postsSkeleton from "../Skeletons/PostsSkeleton";
 
-const Timeline = ({ width }) => {
+const Timeline = ({ width, fetchPosts }) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState({});
 
   !width && (width = "100%");
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUser(user.usuario);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchPostsData = async () => {
       try {
-        const data = await postService.listarPosts(null);
+        const data = await fetchPosts();
         setPosts(data);
       } catch (error) {
         setError(error.message);
@@ -23,14 +31,13 @@ const Timeline = ({ width }) => {
       }
     };
 
-    fetchPosts();
-  }, []);
+    fetchPostsData();
+  }, [fetchPosts]);
 
   const renderedPosts = posts.map((post) => (
     <Card
       key={post.id}
       sx={{
-        marginBottom: 2,
         backgroundColor: "#2f2f34",
         borderRadius: 8,
         margin: 6,
@@ -56,17 +63,37 @@ const Timeline = ({ width }) => {
             mb: 2,
           }}
         >
-          <Avatar
-            src={`http://localhost:3000/usuarios/${post.usuario.id}/avatar`}
-            alt={post.usuario.apelido}
-            sx={{
-              marginRight: 1,
-              color: "#2f2f34",
-              height: 50,
-              width: 50,
-            }}
-          />
-          <Typography variant="subtitle1">@{post.usuario.apelido}</Typography>
+          {post.usuario ? (
+            <>
+              <Avatar
+                src={`http://localhost:3000/usuarios/${post.usuario.id}/avatar`}
+                alt={post.usuario.apelido}
+                sx={{
+                  marginRight: 1,
+                  color: "#2f2f34",
+                  height: 50,
+                  width: 50,
+                }}
+              />
+              <Typography variant="subtitle1">
+                @{post.usuario.apelido}
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Avatar
+                src={`http://localhost:3000/usuarios/${user.id}/avatar`}
+                alt={user.apelido}
+                sx={{
+                  marginRight: 1,
+                  color: "#2f2f34",
+                  height: 50,
+                  width: 50,
+                }}
+              />
+              <Typography variant="subtitle1">@{user.apelido}</Typography>
+            </>
+          )}
         </Box>
         <Typography
           variant="h4"
@@ -101,7 +128,18 @@ const Timeline = ({ width }) => {
           width,
         }}
       >
-        {error && <Typography color="error">{error}</Typography>}
+        {error && (
+          <Typography
+            variant="h5"
+            color="error"
+            sx={{
+              textAlign: "center",
+              m: 6,
+            }}
+          >
+            {error}
+          </Typography>
+        )}
         {loading ? loadingPosts() : renderedPosts}
       </Box>
     </>

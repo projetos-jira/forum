@@ -13,7 +13,7 @@ const Header = ({ searchInput }) => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setUserName(user.usuario?.nome.split(" ")[0]);
+      setUserName(user.usuario?.apelido || user.usuario?.nome);
     }
   }, []);
 
@@ -134,7 +134,7 @@ const Header = ({ searchInput }) => {
         variant="subtitle1"
         sx={{ color: "#fff", marginRight: "100px" }}
       >
-        Olá, <strong>{userName || "Convidado"}</strong>
+        Olá, <strong>{`@${userName}` || "Convidado"}</strong>
       </Typography>
     </Box>
   );

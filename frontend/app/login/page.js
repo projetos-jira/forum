@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Container,
   TextField,
   Button,
   Typography,
@@ -10,12 +9,33 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import Link from "next/link";
 import userService from "../../services/userService";
 import { useRouter } from "next/navigation";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  textField: {
+    "& .MuiFilledInput-root": {
+      backgroundColor: "#2f2f34",
+      "&:hover": {
+        backgroundColor: "#3a3a3f",
+      },
+      "&.Mui-focused": {
+        backgroundColor: "#3a3a3f",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#fff",
+    },
+    "& .MuiInputBase-input": {
+      color: "#fff",
+    },
+  },
+});
 
 const Login = () => {
+  const classes = useStyles();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [open, setOpen] = useState(false);
@@ -28,9 +48,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await userService.login(email, senha);
-
       localStorage.setItem("user", JSON.stringify(response));
-      setAlertMessage("Usuário logado com sucesso!");
+      setAlertMessage(response.message);
       setAlertSeverity("success");
       setOpen(true);
       setTimeout(() => {
@@ -51,19 +70,25 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <>
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "#232328",
+          paddingTop: 6,
+          height: "100vh",
         }}
       >
-        <Typography component="h1" variant="h4">
+        <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
           Login
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 3, width: 500 }}
+        >
           <TextField
             margin="normal"
             required
@@ -75,6 +100,8 @@ const Login = () => {
             autoFocus
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            variant="filled"
+            className={classes.textField}
           />
           <TextField
             margin="normal"
@@ -87,6 +114,8 @@ const Login = () => {
             autoComplete="current-password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            variant="filled"
+            className={classes.textField}
           />
           <Button
             type="submit"
@@ -96,10 +125,10 @@ const Login = () => {
           >
             Entrar
           </Button>
-          <Typography variant="body2" align="center">
+          <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
             Não possui uma conta?{" "}
-            <Link style={{ color: "blue" }} href="/">
-              Faça cadastro
+            <Link style={{ color: "#4468CF" }} href="/">
+              Cadastre-se
             </Link>
           </Typography>
         </Box>
@@ -118,7 +147,7 @@ const Login = () => {
           {alertMessage}
         </Alert>
       </Snackbar>
-    </Container>
+    </>
   );
 };
 

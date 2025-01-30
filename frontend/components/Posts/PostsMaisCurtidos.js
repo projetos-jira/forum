@@ -12,8 +12,7 @@ const MaisCurtidos = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const data = await postService.listarPosts("mais-curtidos", token);
+        const data = await postService.listarPosts("mais-curtidos");
         setPosts(data);
       } catch (error) {
         setError(error.message);

@@ -3,9 +3,14 @@ import axios from "axios";
 const API_URL = "http://localhost:3001/usuarios";
 
 const userService = {
-  register: async (nome, email, senha) => {
+  register: async (nome, email, senha, apelido) => {
     try {
-      const response = await axios.post(API_URL, { nome, email, senha });
+      const response = await axios.post(API_URL, {
+        nome,
+        email,
+        senha,
+        apelido,
+      });
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.erro || "Erro ao registrar usuário");

@@ -6,8 +6,8 @@ const bcrypt = require("bcrypt");
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const usuarioService = {
-  cadastrarUsuario: async (nome, email, senha) => {
-    if (!nome || !email || !senha)
+  cadastrarUsuario: async (nome, email, senha, apelido) => {
+    if ((!nome || !email || !senha, !apelido))
       return { erro: "Envie todos os campos obrigatórios." };
 
     if (nome.length < 3)
@@ -21,6 +21,8 @@ const usuarioService = {
       return { erro: "A senha deve ter no mínimo 6 caracteres." };
 
     try {
+      const apelidoExiste = await Usuario.findOne({ where: { apelido } });
+      if (apelidoExiste) return { erro: "Apelido já cadastrado." };
       const usuarioExiste = await Usuario.findOne({ where: { email } });
       if (usuarioExiste) return { erro: "Email já cadastrado" };
 
@@ -29,6 +31,7 @@ const usuarioService = {
         nome,
         email,
         senha: hashedSenha,
+        apelido,
       });
 
       const token = jwt.sign({ id: resultado.id }, SECRET_KEY, {
@@ -51,7 +54,7 @@ const usuarioService = {
       if (!senhaValida) return { erro: "Email ou senha incorretos." };
 
       const token = jwt.sign({ id: usuario.id }, SECRET_KEY, {
-        expiresIn: 300,
+        expiresIn: "1h",
       });
 
       return { usuario, token };
@@ -107,6 +110,14 @@ const usuarioService = {
     } catch (error) {
       return { erro: error.message };
     }
+  },
+  uploadAvatar: async (id, file) => {
+    const user = await Usuario.findByPk(id);
+    if (user) {
+      const avatar = file ? file.buffer : user.avatar;
+      await user.update({ avatar });
+    }
+    return user;
   },
 };
 

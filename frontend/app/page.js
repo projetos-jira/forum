@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Container,
   TextField,
   Button,
   Typography,
@@ -10,14 +9,36 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
 import Link from "next/link";
 import userService from "../services/userService";
 import { useRouter } from "next/navigation";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  textField: {
+    "& .MuiFilledInput-root": {
+      backgroundColor: "#2f2f34",
+      "&:hover": {
+        backgroundColor: "#3a3a3f",
+      },
+      "&.Mui-focused": {
+        backgroundColor: "#3a3a3f",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#fff",
+    },
+    "& .MuiInputBase-input": {
+      color: "#fff",
+    },
+  },
+});
 
 const Cadastro = () => {
+  const classes = useStyles();
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+  const [apelido, setApelido] = useState("");
   const [senha, setSenha] = useState("");
   const [open, setOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -28,8 +49,8 @@ const Cadastro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const resultado = await userService.register(nome, email, senha);
-      setAlertMessage("Usuário cadastrado com sucesso!");
+      const resultado = await userService.register(nome, email, senha, apelido);
+      setAlertMessage(resultado.message);
       setAlertSeverity("success");
       setOpen(true);
       setTimeout(() => {
@@ -50,19 +71,25 @@ const Cadastro = () => {
   };
 
   return (
-    <Container component="main" maxWidth="sm">
+    <>
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          backgroundColor: "#232328",
+          paddingTop: 6,
+          height: "100vh",
         }}
       >
-        <Typography component="h1" variant="h4">
+        <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
           Cadastro
         </Typography>
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ mt: 3, width: 500 }}
+        >
           <TextField
             margin="normal"
             required
@@ -74,6 +101,8 @@ const Cadastro = () => {
             autoFocus
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            variant="filled"
+            className={classes.textField}
           />
           <TextField
             margin="normal"
@@ -85,7 +114,24 @@ const Cadastro = () => {
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            variant="filled"
+            className={classes.textField}
           />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="apelido"
+            label="Apelido"
+            name="apelido"
+            autoComplete="apelido"
+            autoFocus
+            value={apelido}
+            onChange={(e) => setApelido(e.target.value)}
+            variant="filled"
+            className={classes.textField}
+          />
+
           <TextField
             margin="normal"
             required
@@ -97,6 +143,8 @@ const Cadastro = () => {
             autoComplete="current-password"
             value={senha}
             onChange={(e) => setSenha(e.target.value)}
+            variant="filled"
+            className={classes.textField}
           />
           <Button
             type="submit"
@@ -104,12 +152,12 @@ const Cadastro = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
           >
-            Cadastrar
+            Entrar
           </Button>
-          <Typography variant="body2" align="center">
+          <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
             Já tem uma conta?{" "}
-            <Link style={{ color: "blue" }} href="/login">
-              Faça login
+            <Link style={{ color: "#4468CF" }} href="/login">
+              Entre
             </Link>
           </Typography>
         </Box>
@@ -128,7 +176,7 @@ const Cadastro = () => {
           {alertMessage}
         </Alert>
       </Snackbar>
-    </Container>
+    </>
   );
 };
 

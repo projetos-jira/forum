@@ -2,8 +2,13 @@ const usuarioService = require("../services/usuarioService");
 
 const usuarioController = {
   cadastrarUsuario: async (req, res) => {
-    const { nome, email, senha } = req.body;
-    const resultado = await usuarioService.cadastrarUsuario(nome, email, senha);
+    const { nome, email, senha, apelido } = req.body;
+    const resultado = await usuarioService.cadastrarUsuario(
+      nome,
+      email,
+      senha,
+      apelido
+    );
     if (resultado.erro) return res.status(400).json(resultado);
     return res.status(201).json({
       message: "Usuário cadastrado com sucesso.",
@@ -12,7 +17,7 @@ const usuarioController = {
     });
   },
   logarUsuario: async (req, res) => {
-    const { email, senha } = req.query;
+    const { email, senha } = req.body;
 
     const resultado = await usuarioService.logarUsuario(email, senha);
     if (resultado.erro) return res.status(400).json(resultado);
@@ -55,10 +60,20 @@ const usuarioController = {
 
     const resultado = await usuarioService.listarPostsPorUsuario(id);
     if (resultado.erro) return res.status(400).json(resultado);
-    return res.status(200).json({
-      message: "Posts do usuário listados com sucesso.",
-      posts: resultado,
-    });
+    return res.status(200).json(resultado);
+  },
+  uploadAvatar: async (req, res) => {
+    try {
+      const user = await usuarioService.uploadAvatar(req.params.id, req.file);
+      if (!user)
+        return res.status(404).json({ message: "Usúario não encontrado" });
+
+      res.status(200).json({ message: "Avatar adicionado com sucesso!" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Failed to upload avatar", error: error.message });
+    }
   },
 };
 
