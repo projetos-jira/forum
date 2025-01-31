@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3001/posts"; 
+const API_URL = "http://localhost:3001/posts";
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id, token) => {
@@ -20,13 +20,10 @@ const postService = {
     }
   },
 
-  listarPosts: async (filtro, token) => {
+  listarPosts: async (filtro) => {
     try {
       const response = await axios.get(API_URL, {
         params: { filtro },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
       return response.data;
     } catch (error) {
@@ -51,13 +48,9 @@ const postService = {
     }
   },
 
-  listarPostPorId: async (id, token) => {
+  listarPostPorId: async (id) => {
     try {
-      const response = await axios.get(`${API_URL}/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(`${API_URL}/${id}`, {});
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.erro || "Erro ao obter post");

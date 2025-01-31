@@ -182,8 +182,8 @@ const Cadastro = () => {
         </Box>
       </Box>
       <Snackbar
-        open={open}
-        autoHideDuration={3000}
+        open={alert.open}
+        autoHideDuration={6000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >

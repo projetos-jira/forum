@@ -165,7 +165,7 @@ const Login = () => {
         </Box>
       </Box>
       <Snackbar
-        open={open}
+        open={alert.open}
         autoHideDuration={6000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
