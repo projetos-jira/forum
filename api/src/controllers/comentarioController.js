@@ -3,36 +3,42 @@ const comentarioService = require("../services/comentarioService");
 const comentarioController = {
   criarComentario: async (req, res) => {
     const { conteudo, user_id } = req.body;
-    const { postId } = req.params;
+    const { id } = req.params;
 
-    if (!user_id) {
-      return res.status(400).json({ erro: "User ID não fornecido" });
+    try {
+      const comentario = await comentarioService.criarComentario(
+        id,
+        conteudo,
+        user_id
+      );
+      if (comentario.erro) return res.status(400).json(comentario);
+      return res.status(201).json(comentario);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
     }
-    const resultado = await comentarioService.criarComentario(
-      postId,
-      conteudo,
-      user_id
-    );
-    if (resultado.erro) return res.status(400).json({ erro: resultado.erro });
-    res.status(201).json(resultado);
-  },
-  buscarComentarios: async (req, res) => {
-    const { postId } = req.params;
-    const comentarios = await comentarioService.buscarComentarios(postId);
-    res.status(200).json(comentarios);
   },
   curtirComentario: async (req, res) => {
-    const { comentarioId } = req.params;
-    const { userId } = req.body;
-    const resultado = await comentarioService.curtirComentario(
-      comentarioId,
-      userId
-    );
-    if (resultado.erro) return res.status(400).json(resultado);
-    res.status(200).json({
-      message: "Comentário curtido com sucesso.",
-      comentario: resultado,
-    });
+    const { id } = req.params;
+    const { user_id } = req.body;
+
+    try {
+      const comentario = await comentarioService.curtirComentario(id, user_id);
+      if (comentario.erro) return res.status(400).json(comentario);
+      res.status(200).json(comentario);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
+  },
+  removerCurtida: async (req, res) => {
+    const { id } = req.params;
+    const { user_id } = req.body;
+    try {
+      const comentario = await comentarioService.removerCurtida(id, user_id);
+      if (comentario.erro) return res.status(400).json(comentario);
+      res.status(200).json(comentario);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
 };
 

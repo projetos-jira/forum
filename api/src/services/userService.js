@@ -1,12 +1,12 @@
 require("dotenv").config();
-const Usuario = require("../model/Usuario");
+const User = require("../model/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-const usuarioService = {
-  cadastrarUsuario: async (nome, email, senha, apelido) => {
+const userService = {
+  cadastrarUser: async (nome, email, senha, apelido) => {
     if ((!nome || !email || !senha, !apelido))
       return { erro: "Envie todos os campos obrigatórios." };
 
@@ -14,57 +14,54 @@ const usuarioService = {
       return { erro: "O nome deve ter no mínimo 3 caracteres." };
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (!emailRegex.test(email)) return { erro: "Email inválido." };
 
-    if (apelido.length < 3)
-      return { erro: "O apelido deve ter no mínimo 3 caracteres." };
+    if (apelido.length < 2)
+      return { erro: "O apelido deve ter no mínimo 2 caracteres." };
 
     if (senha.length < 6)
       return { erro: "A senha deve ter no mínimo 6 caracteres." };
 
     try {
-      const apelidoExiste = await Usuario.findOne({ where: { apelido } });
+      const apelidoExiste = await User.findOne({ where: { apelido } });
       if (apelidoExiste) return { erro: "Apelido já cadastrado." };
-      const usuarioExiste = await Usuario.findOne({ where: { email } });
+      const usuarioExiste = await User.findOne({ where: { email } });
       if (usuarioExiste) return { erro: "Email já cadastrado" };
 
       const hashedSenha = await bcrypt.hash(senha, 10);
-      const resultado = await Usuario.create({
+      const user = await User.create({
         nome,
         email,
         senha: hashedSenha,
         apelido,
       });
 
-      const token = jwt.sign({ id: resultado.id }, SECRET_KEY, {
-        expiresIn: "1h",
-      });
-      return { resultado, token };
+      return user;
     } catch (error) {
       return { erro: error.message };
     }
   },
-  logarUsuario: async (email, senha) => {
+  logarUser: async (email, senha) => {
     if (!email || !senha)
       return { erro: "Envie todos os campos obrigatórios." };
 
     try {
-      const usuario = await Usuario.findOne({ where: { email } });
-      if (!usuario) return { erro: "Email ou senha incorretos." };
-      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      const user = await User.findOne({ where: { email } });
+      if (!user) return { erro: "Email ou senha incorretos." };
+
+      const senhaValida = await bcrypt.compare(senha, user.senha);
       if (!senhaValida) return { erro: "Email ou senha incorretos." };
 
-      const token = jwt.sign({ id: usuario.id }, SECRET_KEY, {
+      const token = jwt.sign({ id: user.id }, SECRET_KEY, {
         expiresIn: "1h",
       });
 
-      return { usuario, token };
+      return { user, token };
     } catch (error) {
       return { erro: error.message };
     }
   },
-  atualizarUsuario: async (id, nome, email, senha, apelido, profissao) => {
+  atualizarUser: async (id, nome, email, senha, apelido, profissao) => {
     if (!id) return { erro: "Envie o id do usuário." };
     if (!nome && !email && !senha && !apelido && !profissao)
       return { erro: "Envie ao menos um campo para atualizar." };
@@ -73,17 +70,15 @@ const usuarioService = {
       return { erro: "O nome deve ter no mínimo 3 caracteres." };
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     if (email && !emailRegex.test(email)) return { erro: "Email inválido." };
 
-    if (apelido.length < 3)
-      return { erro: "O apelido deve ter no mínimo 3 caracteres." };
-
+    if (apelido.length < 2)
+      return { erro: "O apelido deve ter no mínimo 2 caracteres." };
     if (senha && senha.length < 6)
       return { erro: "A senha deve ter no mínimo 6 caracteres." };
 
     try {
-      const user = await Usuario.findByPk(id);
+      const user = await User.findByPk(id);
       if (!user) return { erro: "Usuário não encontrado." };
 
       if (
@@ -94,39 +89,41 @@ const usuarioService = {
       )
         return { erro: "Nenhum dado foi alterado." };
 
-      if (email !== user.email) {
-        const emailExits = await Usuario.findOne({ where: { email } });
-        if (emailExits) return { erro: "Email já cadastrado." };
-      }
+      const emailExits = await User.findOne({ where: { email } });
+      if (emailExits && email != user.email)
+        return { erro: "Email já cadastrado." };
 
-      const apelidoExiste = await Usuario.findOne({ where: { apelido } });
+      const apelidoExiste = await User.findOne({ where: { apelido } });
       if (apelidoExiste && apelido != user.apelido)
         return { erro: "Apelido já cadastrado." };
 
       const updateData = { nome, email, apelido, profissao };
-      if (senha) {
-        updateData.senha = await bcrypt.hash(senha, 10);
-      }
 
-      const resultado = await Usuario.update(updateData, { where: { id } });
-      return resultado;
+      updateData.senha = await bcrypt.hash(senha, 10);
+
+      await User.update(updateData, { where: { id } });
+      return { message: "Usuário atualizado com sucesso." };
     } catch (error) {
       return { erro: error.message };
     }
   },
-  listarPostsPorUsuario: async (id) => {
+  listarUserPosts: async (id) => {
     if (!id) return { erro: "Envie o id do usuário." };
     try {
-      const resultado = await Usuario.findByPk(id, {
-        include: { association: "posts" },
+      const user = await User.findByPk(id, {
+        include: {
+          association: "Posts",
+          attributes: ["id", "titulo", "conteudo", "createdAt", "updatedAt"],
+        },
       });
-      return resultado.posts;
+      if (!user) return { erro: "Usuário não encontrado." };
+      return user;
     } catch (error) {
       return { erro: error.message };
     }
   },
   uploadAvatar: async (id, file) => {
-    const user = await Usuario.findByPk(id);
+    const user = await User.findByPk(id);
     if (user) {
       const avatar = file ? file.buffer : user.avatar;
       await user.update({ avatar });
@@ -135,4 +132,4 @@ const usuarioService = {
   },
 };
 
-module.exports = usuarioService;
+module.exports = userService;

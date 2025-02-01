@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const usuarioRouter = require("./routes/usuarioRouter");
+const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
 const comentarioRouter = require("./routes/comentarioRouter");
 const swaggerUi = require("swagger-ui-express");
@@ -48,7 +48,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/usuarios", usuarioRouter);
+app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/", comentarioRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));

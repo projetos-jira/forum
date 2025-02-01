@@ -143,7 +143,7 @@ router.put("/:id", authMiddleware, postController.atualizarPost);
  *       404:
  *         description: Post não encontrado
  */
-router.get("/:id", authMiddleware, postController.listarPostPorId);
+router.get("/:id", postController.listarUmPost);
 
 /**
  * @swagger
@@ -198,5 +198,7 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  *         description: Erro na requisição
  */
 router.put("/:id/curtir", authMiddleware, postController.curtirPost);
+
+router.put("/:id/removerCurtida", postController.removerCurtida);
 
 module.exports = router;

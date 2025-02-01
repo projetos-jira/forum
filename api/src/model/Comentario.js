@@ -15,15 +15,19 @@ class Comentario extends Model {
       {
         sequelize,
         modelName: "Comentario",
-        tableName: "comentarios",
+        tableName: "Comentarios",
         timestamps: true,
       }
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Post, { foreignKey: "post_id", as: "post" });
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "usuario" });
+    this.belongsTo(models.Post, { foreignKey: "post_id", as: "Post" });
+    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.hasMany(models.ComentarioCurtidas, {
+      foreignKey: "comentario_id",
+      as: "Curtidas",
+    });
   }
 }
 

@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require("sequelize");
 
-class Usuario extends Model {
+class User extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -14,14 +14,18 @@ class Usuario extends Model {
       {
         sequelize,
         modelName: "Usuario",
-        tableName: "usuarios",
+        tableName: "Users",
         timestamps: true,
       }
     );
   }
   static associate(models) {
-    this.hasMany(models.Post, { foreignKey: "user_id", as: "posts" });
+    this.hasMany(models.Post, { foreignKey: "user_id", as: "Posts" });
+    this.hasMany(models.Comentario, {
+      foreignKey: "user_id",
+      as: "Comentarios",
+    });
   }
 }
 
-module.exports = Usuario;
+module.exports = User;

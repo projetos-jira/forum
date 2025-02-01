@@ -3,68 +3,86 @@ const postService = require("../services/postService");
 const postController = {
   criarPost: async (req, res) => {
     const { titulo, conteudo, user_id } = req.body;
-    const resultado = await postService.criarPost(titulo, conteudo, user_id);
-    if (resultado.erro) return res.status(400).json(resultado);
+    try {
+      const post = await postService.criarPost(titulo, conteudo, user_id);
+      if (post.erro) return res.status(400).json(post);
 
-    res.status(201).json({
-      message: "Post criado com sucesso.",
-      post: resultado,
-    });
+      return res.status(201).json(post);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
   listarPosts: async (req, res) => {
     const { filtro } = req.query;
-    const resultado = await postService.listarPosts(filtro);
-    if (resultado.erro) return res.status(400).json(resultado);
-    res.status(200).json(resultado);
+    try {
+      const posts = await postService.listarPosts(filtro);
+      if (posts.erro) return res.status(400).json(posts);
+
+      return res.status(200).json(posts);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
   atualizarPost: async (req, res) => {
     const { id } = req.params;
     const { titulo, conteudo } = req.body;
 
-    const post = await postService.obterUserIdDoPost(id);
-    if (!post) return res.status(404).json({ erro: "Post não encontrado." });
+    try {
+      const post = await postService.atualizarPost(id, titulo, conteudo);
+      if (post.erro) return res.status(400).json(post);
 
-    if (req.userId !== post.user_id)
-      return res.status(403).json({ erro: "Acesso negado." });
-
-    const resultado = await postService.atualizarPost(id, titulo, conteudo);
-    if (resultado.erro) return res.status(400).json(resultado);
-
-    res.status(200).json({
-      message: "Post atualizado com sucesso.",
-    });
+      res.status(200).json(post);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
-  listarPostPorId: async (req, res) => {
+  listarUmPost: async (req, res) => {
     const { id } = req.params;
-    const resultado = await postService.listarPostPorId(id);
-    if (resultado.erro) return res.status(400).json(resultado);
-    res.status(200).json(resultado);
+    try {
+      const post = await postService.listarUmPost(id);
+      if (post.erro) return res.status(400).json(post);
+      res.status(200).json(post);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
   deletarPost: async (req, res) => {
     const { id } = req.params;
 
-    const post = await postService.obterUserIdDoPost(id);
-    if (!post) return res.status(404).json({ erro: "Post não encontrado." });
+    try {
+      const postDeletado = await postService.deletarPost(id);
+      if (postDeletado.erro) return res.status(400).json(postDeletado);
 
-    if (req.userId !== post.user_id)
-      return res.status(403).json({ erro: "Acesso negado." });
-
-    const resultado = await postService.deletarPost(id);
-    if (resultado.erro) return res.status(400).json(resultado);
-
-    res.status(200).json({
-      message: "Post deletado com sucesso.",
-    });
+      res.status(200).json({
+        message: "Post deletado com sucesso.",
+      });
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
   curtirPost: async (req, res) => {
     const { id } = req.params;
-    const { userId } = req.body;
-    const resultado = await postService.curtirPost(id, userId);
-    if (resultado.erro) return res.status(400).json(resultado);
-    res.status(200).json({
-      message: "Post curtido com sucesso.",
-      post: resultado,
-    });
+    const { user_id } = req.body;
+
+    try {
+      const post = await postService.curtirPost(id, user_id);
+      if (post.erro) return res.status(400).json(post);
+      res.status(200).json(post);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
+  },
+  removerCurtida: async (req, res) => {
+    const { id } = req.params;
+    const { user_id } = req.body;
+
+    try {
+      const post = await postService.removerCurtida(id, user_id);
+      if (post.erro) return res.status(400).json(post);
+      res.status(200).json(post);
+    } catch (error) {
+      return res.status(500).json({ erro: error.message });
+    }
   },
 };
 

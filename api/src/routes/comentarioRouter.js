@@ -45,8 +45,8 @@ const router = express.Router();
  *         description: Erro na requisição
  */
 router.post(
-  "/posts/:postId/comentarios/",
-  authMiddleware,
+  "/posts/:id/comentarios/",
+
   comentarioController.criarComentario
 );
 
@@ -92,45 +92,16 @@ router.post(
  *       400:
  *         description: Erro na requisição
  */
-router.get(
-  "/posts/:postId/comentarios/",
-  comentarioController.buscarComentarios
+
+router.put(
+  "/posts/comentarios/:id/curtir",
+  comentarioController.curtirComentario
 );
 
-/**
- * @swagger
- * /posts/comentarios/{comentarioId}/curtir:
- *   put:
- *     summary: Curtir um comentário
- *     tags: [Comentários]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: comentarioId
- *         schema:
- *           type: integer
- *         required: true
- *         description: ID do comentário
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               userId:
- *                 type: integer
- *     responses:
- *       200:
- *         description: Comentário curtido com sucesso
- *       400:
- *         description: Erro na requisição
- */
 router.put(
-  "/posts/comentarios/:comentarioId/curtir",
+  "/posts/comentarios/:id/removerCurtida",
   authMiddleware,
-  comentarioController.curtirComentario
+  comentarioController.removerCurtida
 );
 
 module.exports = router;

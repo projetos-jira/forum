@@ -15,14 +15,22 @@ class Post extends Model {
       {
         sequelize,
         modelName: "Post",
-        tableName: "posts",
+        tableName: "Posts",
         timestamps: true,
       }
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "usuario" });
+    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.hasMany(models.Comentario, {
+      foreignKey: "post_id",
+      as: "Comentarios",
+    });
+    this.hasMany(models.PostCurtidas, {
+      foreignKey: "post_id",
+      as: "Curtidas",
+    });
   }
 }
 

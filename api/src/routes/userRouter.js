@@ -1,5 +1,5 @@
 const express = require("express");
-const usuarioController = require("../controllers/usuarioController");
+const userController = require("../controllers/userController");
 const authMiddleware = require("../middlewares/authMiddleware");
 const multer = require("multer");
 const router = express.Router();
@@ -42,7 +42,7 @@ const upload = multer();
  *       400:
  *         description: Erro na requisição
  */
-router.post("/", usuarioController.cadastrarUsuario);
+router.post("/", userController.cadastrarUser);
 
 /**
  * @swagger
@@ -67,7 +67,7 @@ router.post("/", usuarioController.cadastrarUsuario);
  *       400:
  *         description: Erro na requisição
  */
-router.post("/login", usuarioController.logarUsuario);
+router.post("/login", userController.logarUser);
 
 /**
  * @swagger
@@ -111,7 +111,7 @@ router.post("/login", usuarioController.logarUsuario);
  *       403:
  *         description: Acesso negado
  */
-router.put("/:id", authMiddleware, usuarioController.atualizarUsuario);
+router.put("/:id", authMiddleware, userController.atualizarUser);
 
 /**
  * @swagger
@@ -136,16 +136,8 @@ router.put("/:id", authMiddleware, usuarioController.atualizarUsuario);
  *       403:
  *         description: Acesso negado
  */
-router.get(
-  "/posts/:id",
-  authMiddleware,
-  usuarioController.listarPostsPorUsuario
-);
+router.get("/posts/:id", authMiddleware, userController.listarUserPosts);
 
-router.put(
-  "/:id/avatar",
-  upload.single("avatar"),
-  usuarioController.uploadAvatar
-);
+router.put("/:id/avatar", upload.single("avatar"), userController.uploadAvatar);
 
 module.exports = router;
