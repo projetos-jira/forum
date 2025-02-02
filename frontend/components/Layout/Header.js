@@ -11,7 +11,7 @@ const Header = ({ searchInput }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const user = storedUser.usuario;
+    const user = storedUser.user;
     setUserName(user.apelido);
   }, []);
 

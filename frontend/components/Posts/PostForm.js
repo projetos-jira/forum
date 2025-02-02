@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TextField,
   Button,
@@ -9,10 +7,9 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import Link from "next/link";
-import userService from "../services/userService";
-import { useRouter } from "next/navigation";
 import { makeStyles } from "@mui/styles";
+import postService from "../../services/postService";
+import { useRouter } from "next/navigation";
 
 const useStyles = makeStyles({
   textField: {
@@ -34,13 +31,14 @@ const useStyles = makeStyles({
   },
 });
 
-const Cadastro = () => {
+const PostForm = ({ titulo, onSubmit, id }) => {
   const classes = useStyles();
+  const router = useRouter();
+  const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState(null);
   const [formulario, setFormulario] = useState({
-    nome: "",
-    email: "",
-    apelido: "",
-    senha: "",
+    titulo: "",
+    conteudo: "",
   });
   const [alert, setAlert] = useState({
     message: "",
@@ -48,7 +46,28 @@ const Cadastro = () => {
     open: false,
   });
 
-  const router = useRouter();
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const userId = storedUser.user.id;
+    const token = storedUser.token;
+    setUserId(userId);
+    setToken(token);
+
+    const fetchPostData = async () => {
+      if (id === undefined) return;
+      try {
+        const data = await postService.listarUmPost(id);
+        setFormulario(data);
+      } catch (error) {
+        setAlert({
+          message: "Erro ao carregar post",
+          severity: "error",
+          open: true,
+        });
+      }
+    };
+    fetchPostData();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,17 +79,31 @@ const Cadastro = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const { nome, email, apelido, senha } = formulario;
-      await userService.register(nome, email, senha, apelido);
+      const { titulo, conteudo } = formulario;
+
+      if (id !== undefined) {
+        await onSubmit(id, titulo, conteudo, token);
+        setAlert({
+          message: "Post atualizado com sucesso!",
+          severity: "success",
+          open: true,
+        });
+        setTimeout(() => {
+          router.push(`/posts/${id}`);
+        }, 2000);
+        return;
+      }
+      await onSubmit(titulo, conteudo, userId, token);
       setAlert({
-        message: "Cadastro realizado com sucesso!",
+        message: "Post criado com sucesso!",
         severity: "success",
         open: true,
       });
 
       setTimeout(() => {
-        router.push("/login");
+        router.push("/home");
       }, 2000);
     } catch (error) {
       setAlert({
@@ -96,28 +129,27 @@ const Cadastro = () => {
           flexDirection: "column",
           alignItems: "center",
           backgroundColor: "#232328",
-          paddingTop: 6,
-          height: "100vh",
+          margin: 6,
+          height: "70vh",
         }}
       >
         <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
-          Cadastro
+          {titulo}
         </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit}
-          sx={{ mt: 3, width: 500 }}
+          sx={{ mt: 2, width: 500 }}
         >
           <TextField
             margin="normal"
             required
             fullWidth
-            id="nome"
-            label="Nome"
-            name="nome"
-            autoComplete="nome"
-            autoFocus
-            value={formulario.nome}
+            id="titulo"
+            label="Título"
+            name="titulo"
+            autoComplete="titulo"
+            value={formulario.titulo}
             onChange={handleChange}
             variant="filled"
             className={classes.textField}
@@ -126,40 +158,13 @@ const Cadastro = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            value={formulario.email}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="apelido"
-            label="Apelido"
-            name="apelido"
-            autoComplete="apelido"
-            autoFocus
-            value={formulario.apelido}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="senha"
-            label="Senha"
-            type="password"
-            id="senha"
-            autoComplete="password"
-            value={formulario.senha}
+            id="conteudo"
+            label="Conteúdo"
+            name="conteudo"
+            autoComplete="conteudo"
+            multiline
+            rows={10}
+            value={formulario.conteudo}
             onChange={handleChange}
             variant="filled"
             className={classes.textField}
@@ -169,16 +174,10 @@ const Cadastro = () => {
             fullWidth
             variant="contained"
             size="large"
-            sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
+            sx={{ mt: 2, fontWeight: "bold" }}
           >
-            Entrar
+            {titulo.split(" ")[0].toUpperCase()}
           </Button>
-          <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
-            Já tem uma conta?{" "}
-            <Link style={{ color: "#4468CF" }} href="/login">
-              Entre
-            </Link>
-          </Typography>
         </Box>
       </Box>
       <Snackbar
@@ -199,4 +198,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default PostForm;

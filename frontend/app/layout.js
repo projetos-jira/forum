@@ -8,15 +8,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-        }}
-      >
-        <main style={{ flex: 1 }}>{children}</main>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

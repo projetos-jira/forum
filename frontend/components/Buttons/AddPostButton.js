@@ -1,9 +1,13 @@
 import React from "react";
 import { Box, Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const AddPostButton = () => {
+  const router = useRouter();
+
   return (
     <Box
+      onClick={() => router.push("/posts/criar")}
       sx={{
         position: "fixed",
         bottom: 20,

@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import postService from "../../services/postService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PostsMaisCurtidosSkeleton from "../Skeletons/PostsMaisCurtidosSkeleton";
 
 const MaisCurtidos = () => {
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState("");
+  const [alert, setAlert] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,13 +22,24 @@ const MaisCurtidos = () => {
         const data = await postService.listarPosts("mais-curtidos");
         setPosts(data);
       } catch (error) {
-        setError(error.message);
+        setAlert({
+          message: "Erro ao carregar posts",
+          severity: "error",
+          open: true,
+        });
       } finally {
         setLoading(false);
       }
     };
     fetchPosts();
   }, []);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ ...alert, open: false });
+  };
 
   const renderedPosts = posts.map((post) => (
     <Card
@@ -70,13 +88,12 @@ const MaisCurtidos = () => {
         borderRadius: 8,
         ml: 6,
         mt: 6,
-        width: "30%",
+        width: "20%",
       }}
     >
       <Typography variant="h6" sx={{ color: "#fff", mb: 3 }}>
         Posts Mais Curtidos
       </Typography>
-      {error && <Typography color="error">{error}</Typography>}
       {loading ? (
         loadingPosts()
       ) : posts.length === 0 ? (
@@ -93,6 +110,20 @@ const MaisCurtidos = () => {
       ) : (
         renderedPosts
       )}
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 

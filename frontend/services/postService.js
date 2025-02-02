@@ -31,7 +31,7 @@ const postService = {
     }
   },
 
-  atualizarPost: async (id, titulo, conteudo, token) => {
+  editarPost: async (id, titulo, conteudo, token) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}`,
@@ -48,7 +48,7 @@ const postService = {
     }
   },
 
-  listarPostPorId: async (id) => {
+  listarUmPost: async (id) => {
     try {
       const response = await axios.get(`${API_URL}/${id}`, {});
       return response.data;
@@ -84,6 +84,17 @@ const postService = {
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.erro || "Erro ao curtir post");
+    }
+  },
+
+  removerCurtida: async (id, userId) => {
+    try {
+      const response = await axios.put(`${API_URL}/${id}/deletarCurtida`, {
+        userId,
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response.data.erro || "Erro ao deletar curtida");
     }
   },
 };

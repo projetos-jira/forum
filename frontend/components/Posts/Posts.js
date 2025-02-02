@@ -1,30 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Avatar,
+  Snackbar,
+  Alert,
+  IconButton,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import postsSkeleton from "../Skeletons/PostsSkeleton";
+import postService from "../../services/postService";
 import { useRouter } from "next/navigation";
 
-const Timeline = ({ width, fetchPosts }) => {
+const Posts = ({ width, fetchPosts, profilePost }) => {
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
+  const [token, setToken] = useState(null);
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+    open: false,
+  });
 
   const router = useRouter();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const user = storedUser;
-    setUser(user.usuario);
+    const user = storedUser.user;
+    const token = storedUser.token;
+    setUser(user);
+    setToken(token);
   }, []);
 
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
         const data = await fetchPosts();
-        setPosts(data);
+        const postsArray = Array.isArray(data) ? data : [data];
+        setPosts(postsArray);
       } catch (error) {
-        setError(error.message);
+        setAlert({
+          message: "Erro ao carregar posts",
+          severity: "error",
+          open: true,
+        });
       } finally {
         setLoading(false);
       }
@@ -33,14 +57,46 @@ const Timeline = ({ width, fetchPosts }) => {
     fetchPostsData();
   }, [fetchPosts]);
 
-  const handlePostClick = (id) => {
+  const handlePostClick = (id, ev) => {
+    if (ev.target.closest("button")) return;
+
     router.push(`/posts/${id}`);
+  };
+
+  const handleEdit = (postId, ev) => {
+    ev.stopPropagation();
+    router.push(`/posts/editar/${postId}`);
+  };
+  const handleDelete = async (postId, ev) => {
+    ev.stopPropagation();
+    try {
+      await postService.deletarPost(postId, token);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      setAlert({
+        message: "Post deletado com sucesso!",
+        severity: "success",
+        open: true,
+      });
+    } catch (error) {
+      setAlert({
+        message: error.message,
+        severity: "error",
+        open: true,
+      });
+    }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ ...alert, open: false });
   };
 
   const renderedPosts = posts.map((post) => (
     <Card
       key={post.id}
-      onClick={() => handlePostClick(post.id)}
+      onClick={(ev) => handlePostClick(post.id, ev)}
       sx={{
         backgroundColor: "#2f2f34",
         borderRadius: 8,
@@ -67,22 +123,24 @@ const Timeline = ({ width, fetchPosts }) => {
             mb: 2,
           }}
         >
-          {post.usuario ? (
+          {post.Usuario ? (
             <>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Avatar
-                  src={`http://localhost:3000/usuarios/${post.usuario.id}/avatar`}
-                  alt={post.usuario.apelido}
                   sx={{
                     marginRight: 1,
                     color: "#2f2f34",
                     height: 50,
                     width: 50,
                   }}
-                />
+                >
+                  {post.Usuario && post.Usuario.apelido
+                    ? post.Usuario.apelido[0].toUpperCase()
+                    : ""}
+                </Avatar>
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                   <Typography variant="subtitle">
-                    @{post.usuario.apelido}
+                    @{post.Usuario.apelido}
                   </Typography>
                   <Typography variant="subtitle2">
                     {new Date(post.createdAt).toLocaleDateString()}
@@ -108,6 +166,16 @@ const Timeline = ({ width, fetchPosts }) => {
                   {new Date(post.createdAt).toLocaleDateString()}
                 </Typography>
               </Box>
+              {profilePost && (
+                <Box sx={{ marginLeft: "auto" }}>
+                  <IconButton onClick={(ev) => handleEdit(post.id, ev)}>
+                    <EditIcon sx={{ color: "#fff" }} />
+                  </IconButton>
+                  <IconButton onClick={(ev) => handleDelete(post.id, ev)}>
+                    <DeleteIcon sx={{ color: "#fff" }} />
+                  </IconButton>
+                </Box>
+              )}
             </>
           )}
         </Box>
@@ -144,18 +212,6 @@ const Timeline = ({ width, fetchPosts }) => {
           width,
         }}
       >
-        {error && (
-          <Typography
-            variant="h5"
-            color="error"
-            sx={{
-              textAlign: "center",
-              m: 6,
-            }}
-          >
-            {error}
-          </Typography>
-        )}
         {loading ? (
           loadingPosts()
         ) : posts.length === 0 ? (
@@ -173,6 +229,20 @@ const Timeline = ({ width, fetchPosts }) => {
           renderedPosts
         )}
       </Box>
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 
@@ -181,4 +251,4 @@ const Timeline = ({ width, fetchPosts }) => {
   }
 };
 
-export default Timeline;
+export default Posts;

@@ -9,12 +9,14 @@ import {
 import Textarea from "@mui/joy/Textarea";
 import { useState, useEffect } from "react";
 import comentarioService from "../../services/comentarioService";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Snackbar, Alert } from "@mui/material";
 
-const PostComents = ({ postId }) => {
+const PostComents = ({ post }) => {
   const [user, setUser] = useState({});
-  const [comentarios, setComentarios] = useState([]);
+  const [token, setToken] = useState(null);
+  const [comentarios, setComentarios] = useState(post.Comentarios || []);
   const [novoComentario, setNovoComentario] = useState("");
   const [alert, setAlert] = useState({
     message: "",
@@ -23,22 +25,16 @@ const PostComents = ({ postId }) => {
   });
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser.usuario);
-  }, []);
+    if (post && post.Comentarios) {
+      setComentarios(post.Comentarios);
+    }
+  }, [post]);
 
   useEffect(() => {
-    const fetchComentarios = async () => {
-      try {
-        const data = await comentarioService.buscarComentarios(postId);
-        setComentarios(data);
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    };
-
-    fetchComentarios();
-  }, [postId]);
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    setToken(storedUser.token);
+    setUser(storedUser.user);
+  }, []);
 
   const handleAdicionarComentario = async () => {
     if (novoComentario.trim() === "") {
@@ -51,27 +47,91 @@ const PostComents = ({ postId }) => {
     }
 
     try {
-      const data = await comentarioService.criarComentario(
-        postId,
+      // Simula a criação do comentário com um ID fictício
+      const comentarioAdicionado = await comentarioService.criarComentario(
+        post.id,
         novoComentario,
         user.id
       );
 
-      const novoComentarioFormatado = {
-        ...data,
-        usuario: { id: user.id, apelido: user.apelido },
-      };
-
-      setComentarios((prevComentarios) => [
-        novoComentarioFormatado,
-        ...prevComentarios,
+      // Adiciona o comentário recém-criado ao estado local
+      setComentarios([
+        {
+          id: comentarioAdicionado.id, // Supondo que a API retorne o ID correto
+          conteudo: novoComentario,
+          Usuario: { apelido: user.apelido, id: user.id },
+          createdAt: new Date(),
+          qtd_curtidas: 0,
+          Curtidas: [], // Não tem curtidas inicialmente
+        },
+        ...comentarios,
       ]);
+
       setNovoComentario("");
       setAlert({
         message: "Comentário adicionado com sucesso!",
         severity: "success",
         open: true,
       });
+    } catch (error) {
+      setAlert({
+        message: error.message,
+        severity: "error",
+        open: true,
+      });
+    }
+  };
+
+  const handleCurtirComentario = async (comentarioId) => {
+    try {
+      const comentario = comentarios.find(
+        (comentario) => comentario.id === comentarioId
+      );
+
+      // Verificar se o usuário curtiu o comentário
+      const isCurtido = comentario.Curtidas.some(
+        (curtida) => curtida.user_id === user.id
+      );
+
+      if (isCurtido) {
+        // Descurtir o comentário
+        await comentarioService.descurtirComentario(
+          comentarioId,
+          user.id,
+          token
+        );
+
+        const updatedComentarios = comentarios.map((comentario) => {
+          if (comentario.id === comentarioId) {
+            return {
+              ...comentario,
+              qtd_curtidas: comentario.qtd_curtidas - 1,
+              Curtidas: comentario.Curtidas.filter(
+                (curtida) => curtida.user_id !== user.id
+              ),
+            };
+          }
+          return comentario;
+        });
+
+        setComentarios(updatedComentarios);
+      } else {
+        // Curtir o comentário
+        await comentarioService.curtirComentario(comentarioId, user.id, token);
+
+        const updatedComentarios = comentarios.map((comentario) => {
+          if (comentario.id === comentarioId) {
+            return {
+              ...comentario,
+              qtd_curtidas: comentario.qtd_curtidas + 1,
+              Curtidas: [...comentario.Curtidas, { user_id: user.id }],
+            };
+          }
+          return comentario;
+        });
+
+        setComentarios(updatedComentarios);
+      }
     } catch (error) {
       setAlert({
         message: error.message,
@@ -95,7 +155,8 @@ const PostComents = ({ postId }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: "23vh",
+        minHeight: "25vh",
+        width: "100%",
       }}
     >
       <Box
@@ -103,18 +164,16 @@ const PostComents = ({ postId }) => {
           width: "60%",
           display: "flex",
           alignItems: "center",
+          marginTop: 6,
         }}
       >
         <Avatar
-          src={`http://localhost:3000/usuarios/${user.id}/avatar`}
-          alt={user.apelido}
-          sx={{
-            marginRight: 1,
-            color: "#2f2f34",
-            height: 50,
-            width: 50,
-          }}
-        />
+          sx={{ marginRight: 1, color: "#2f2f34", height: 50, width: 50 }}
+        >
+          {user && user.apelido && user.apelido[0]
+            ? user.apelido[0].toUpperCase()
+            : "U"}
+        </Avatar>
         <Textarea
           variant="plain"
           placeholder="Adicione um comentário..."
@@ -146,50 +205,70 @@ const PostComents = ({ postId }) => {
       </Box>
 
       <Box sx={{ width: "60%" }}>
-        {comentarios.map((comentario) => (
-          <Card
-            key={comentario.id}
-            sx={{
-              width: "100%",
-              mt: 2,
-              backgroundColor: "#2f2f34",
-              color: "#fff",
-            }}
-          >
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Avatar
-                  src={`http://localhost:3000/usuarios/${comentario.usuario?.id}/avatar`}
-                  alt={comentario.usuario?.apelido || "Usuário"}
+        {comentarios && comentarios.length > 0 ? (
+          comentarios.map((comentario) => (
+            <Card
+              key={comentario.id}
+              sx={{
+                width: "100%",
+                mt: 2,
+                backgroundColor: "#2f2f34",
+                color: "#fff",
+              }}
+            >
+              <CardContent>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Avatar
+                    sx={{
+                      marginRight: 1,
+                      color: "#2f2f34",
+                      height: 50,
+                      width: 50,
+                    }}
+                  >
+                    {comentario.Usuario?.apelido[0].toUpperCase()}
+                  </Avatar>
+                  <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <Typography variant="subtitle">
+                      @{comentario.Usuario?.apelido || "Desconhecido"}
+                    </Typography>
+                    <Typography variant="subtitle2">
+                      {new Date(comentario.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="body1" sx={{ mt: 2 }}>
+                  {comentario.conteudo}
+                </Typography>
+                <Box
+                  onClick={() => handleCurtirComentario(comentario.id)}
                   sx={{
-                    marginRight: 1,
-                    color: "#2f2f34",
-                    height: 50,
-                    width: 50,
+                    display: "flex",
+                    justifyContent: "center",
+                    cursor: "pointer",
                   }}
-                />
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography variant="subtitle">
-                    @{comentario.usuario?.apelido || "Desconhecido"}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {new Date(comentario.createdAt).toLocaleDateString()}
+                >
+                  {comentario.Curtidas.some(
+                    (curtida) => curtida.user_id === user.id
+                  ) ? (
+                    <FavoriteIcon sx={{ mt: 1 }} />
+                  ) : (
+                    <FavoriteBorderIcon sx={{ mt: 1 }} />
+                  )}
+                  <Typography variant="h6" sx={{ ml: 2, mt: 0.5 }}>
+                    {comentario.qtd_curtidas}
                   </Typography>
                 </Box>
-              </Box>
-              <Typography variant="body1" sx={{ mt: 2 }}>
-                {comentario.conteudo}
-              </Typography>
-              <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <FavoriteBorderIcon sx={{ mt: 1 }} />
-                <Typography variant="h6" sx={{ ml: 2, mt: 0.5 }}>
-                  {comentario.qtd_curtidas}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <Typography variant="h4" sx={{ color: "#fff", textAlign: "center" }}>
+            Nenhum comentário ainda.
+          </Typography>
+        )}
       </Box>
+
       <Snackbar
         open={alert.open}
         autoHideDuration={6000}

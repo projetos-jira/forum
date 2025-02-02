@@ -3,7 +3,7 @@
 import { Box } from "@mui/material";
 import Header from "../../components/Layout/Header";
 import PostsMaisCurtidos from "../../components/Posts/PostsMaisCurtidos";
-import Timeline from "../../components/Posts/TimeLine";
+import Posts from "../../components/Posts/Posts";
 import AddPostButton from "../../components/Buttons/AddPostButton";
 import Footer from "../../components/Layout/Footer";
 import postService from "../../services/postService";
@@ -28,7 +28,7 @@ const Home = () => {
         }}
       >
         <PostsMaisCurtidos />
-        <Timeline width={"60%"} fetchPosts={fetchTimeLinePosts} />
+        <Posts width={"70%"} fetchPosts={fetchTimeLinePosts} />
         <AddPostButton />
       </Box>
       <Footer />

@@ -51,10 +51,10 @@ const ProfileContent = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
     setFormulario({
-      nome: storedUser.usuario.nome || "",
-      email: storedUser.usuario.email || "",
-      apelido: storedUser.usuario.apelido || "",
-      profissao: storedUser.usuario.profissao || "",
+      nome: storedUser.user.nome || "",
+      email: storedUser.user.email || "",
+      apelido: storedUser.user.apelido || "",
+      profissao: storedUser.user.profissao || "",
       senha: "",
     });
   }, []);
@@ -65,7 +65,7 @@ const ProfileContent = () => {
 
     try {
       const data = await userService.update(
-        user.usuario.id,
+        user.user.id,
         nome,
         email,
         senha,
@@ -76,8 +76,8 @@ const ProfileContent = () => {
 
       const updatedUser = {
         token: user.token,
-        usuario: {
-          id: user.usuario.id,
+        user: {
+          id: user.user.id,
           nome,
           email,
           apelido,
@@ -86,7 +86,6 @@ const ProfileContent = () => {
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      
       setUser(updatedUser);
       setAlertMessage(data.message);
       setAlertSeverity("success");

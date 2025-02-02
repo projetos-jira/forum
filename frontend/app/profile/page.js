@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import Header from "../../components/Layout/Header";
 import Footer from "../../components/Layout/Footer";
 import ProfileContent from "../../components/Profile/ProfileContent";
-import Timeline from "../../components/Posts/TimeLine";
+import Posts from "../../components/Posts/Posts";
 import AddPostButton from "../../components/Buttons/AddPostButton";
 import userService from "../../services/userService";
 
@@ -11,12 +11,14 @@ const Profile = () => {
   const fetchUserPosts = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser.usuario.id;
+      const userId = storedUser.user.id;
       const token = storedUser.token;
       const data = await userService.listPosts(userId, token);
-      return data;
+
+      return Array.isArray(data.Posts) ? data.Posts : [];
     } catch (error) {
-      throw new Error(error.message);
+      console.error(error);
+      return [];
     }
   };
   return (
@@ -34,7 +36,7 @@ const Profile = () => {
         <Typography variant="h4" sx={{ color: "#fff", mt: 6 }}>
           Meus posts
         </Typography>
-        <Timeline width={"50%"} fetchPosts={fetchUserPosts} />
+        <Posts width={"70%"} fetchPosts={fetchUserPosts} profilePost={true} />
         <AddPostButton />
       </Box>
 

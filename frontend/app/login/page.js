@@ -58,17 +58,17 @@ const Login = () => {
       );
       const userData = {
         token: response.token,
-        usuario: {
-          id: response.usuario.id,
-          nome: response.usuario.nome,
-          email: response.usuario.email,
-          apelido: response.usuario.apelido,
-          profissao: response.usuario.profissao,
+        user: {
+          id: response.user.id,
+          nome: response.user.nome,
+          email: response.user.email,
+          apelido: response.user.apelido,
+          profissao: response.user.profissao,
         },
       };
       localStorage.setItem("user", JSON.stringify(userData));
       setAlert({
-        message: response.message,
+        message: "Login efetuado com sucesso!",
         severity: "success",
         open: true,
       });
