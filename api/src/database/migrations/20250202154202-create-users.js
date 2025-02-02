@@ -35,15 +35,13 @@ module.exports = {
         type: Sequelize.BLOB("long"),
         allowNull: true,
       },
-      created_at: {
-        type: Sequelize.DATE,
+      createdAt: {
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
       },
-      updated_at: {
-        type: Sequelize.DATE,
+      updatedAt: {
         allowNull: false,
-        defaultValue: Sequelize.NOW,
+        type: Sequelize.DATE,
       },
     });
   },

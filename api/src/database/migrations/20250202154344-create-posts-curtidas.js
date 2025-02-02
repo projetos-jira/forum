@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Comentarios", {
+    await queryInterface.createTable("Posts_Curtidas", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -13,40 +13,31 @@ module.exports = {
       post_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "posts", key: "id" },
+        references: { model: "Posts", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: "usuarios", key: "id" },
+        references: { model: "Users", key: "id" },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      conteudo: {
-        type: Sequelize.TEXT,
+      createdAt: {
         allowNull: false,
-      },
-      qtd_curtidas: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      created_at: {
         type: Sequelize.DATE,
-        allowNull: false,
         defaultValue: Sequelize.NOW,
       },
-      updated_at: {
-        type: Sequelize.DATE,
+      updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
       },
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Comentarios");
+    await queryInterface.dropTable("Posts_Curtidas");
   },
 };

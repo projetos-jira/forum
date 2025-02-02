@@ -22,11 +22,16 @@ class Comentario extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Post, { foreignKey: "post_id", as: "Post" });
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.belongsTo(models.Post, {
+      foreignKey: "post_id",
+      as: "Post",
+      onDelete: "CASCADE",
+    });
+    this.belongsTo(models.User, { foreignKey: "user_id", as: "Usuario" });
     this.hasMany(models.ComentarioCurtidas, {
       foreignKey: "comentario_id",
       as: "Curtidas",
+      onDelete: "CASCADE",
     });
   }
 }

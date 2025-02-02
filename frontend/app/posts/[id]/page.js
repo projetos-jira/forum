@@ -7,17 +7,13 @@ import Header from "../../../components/Layout/Header";
 import Footer from "../../../components/Layout/Footer";
 import postService from "../../../services/postService";
 import PostComents from "../../../components/Posts/PostComents";
+import PostDetails from "../../../components/Posts/PostDetails";
 
-const PostDetail = () => {
+const Post = () => {
   const { id } = useParams();
-  const [user, setUser] = useState({});
   const [post, setPost] = useState({});
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const user = storedUser.user;
-    setUser(user);
-
     const fetchPost = async () => {
       try {
         const data = await postService.listarUmPost(id);
@@ -31,9 +27,22 @@ const PostDetail = () => {
   }, [id]);
 
   return (
-    <Box component="main" sx={{ backgroundColor: "#232328" }}>
+    <Box
+      component="main"
+      sx={{
+        backgroundColor: "#232328",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
+        <PostDetails post={post} />
         <PostComents post={post} />
       </Box>
       <Footer />
@@ -41,4 +50,4 @@ const PostDetail = () => {
   );
 };
 
-export default PostDetail;
+export default Post;

@@ -20,11 +20,11 @@ class PostCurtidas extends Model {
             key: "id",
           },
         },
-        created_at: {
+        createdAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
-        updated_at: {
+        updatedAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
@@ -39,8 +39,16 @@ class PostCurtidas extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Post, { foreignKey: "post_id", as: "Post" });
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.belongsTo(models.Post, {
+      foreignKey: "post_id",
+      as: "Post",
+      onDelete: "CASCADE",
+    });
+    this.belongsTo(models.User, {
+      foreignKey: "user_id",
+      as: "Usuario",
+      onDelete: "CASCADE",
+    });
   }
 }
 

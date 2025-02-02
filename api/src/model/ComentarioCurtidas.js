@@ -20,11 +20,11 @@ class ComentarioCurtidas extends Model {
             key: "id",
           },
         },
-        created_at: {
+        createdAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
-        updated_at: {
+        updatedAt: {
           type: DataTypes.DATE,
           defaultValue: DataTypes.NOW,
         },
@@ -33,6 +33,7 @@ class ComentarioCurtidas extends Model {
         sequelize,
         modelName: "ComentarioCurtidas",
         tableName: "Comentarios_Curtidas",
+        timestamps: false,
       }
     );
   }
@@ -41,10 +42,14 @@ class ComentarioCurtidas extends Model {
     this.belongsTo(models.Comentario, {
       foreignKey: "comentario_id",
       as: "Comentario",
+      onDelete: "CASCADE",
     });
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.belongsTo(models.User, {
+      foreignKey: "user_id",
+      as: "Usuario",
+      onDelete: "CASCADE",
+    });
   }
-  
 }
 
 module.exports = ComentarioCurtidas;

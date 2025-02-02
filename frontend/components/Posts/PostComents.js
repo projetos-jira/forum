@@ -47,22 +47,20 @@ const PostComents = ({ post }) => {
     }
 
     try {
-      // Simula a criação do comentário com um ID fictício
       const comentarioAdicionado = await comentarioService.criarComentario(
         post.id,
         novoComentario,
         user.id
       );
 
-      // Adiciona o comentário recém-criado ao estado local
       setComentarios([
         {
-          id: comentarioAdicionado.id, // Supondo que a API retorne o ID correto
+          id: comentarioAdicionado.id,
           conteudo: novoComentario,
           Usuario: { apelido: user.apelido, id: user.id },
           createdAt: new Date(),
           qtd_curtidas: 0,
-          Curtidas: [], // Não tem curtidas inicialmente
+          Curtidas: [],
         },
         ...comentarios,
       ]);
@@ -88,13 +86,11 @@ const PostComents = ({ post }) => {
         (comentario) => comentario.id === comentarioId
       );
 
-      // Verificar se o usuário curtiu o comentário
       const isCurtido = comentario.Curtidas.some(
         (curtida) => curtida.user_id === user.id
       );
 
       if (isCurtido) {
-        // Descurtir o comentário
         await comentarioService.descurtirComentario(
           comentarioId,
           user.id,
@@ -116,7 +112,6 @@ const PostComents = ({ post }) => {
 
         setComentarios(updatedComentarios);
       } else {
-        // Curtir o comentário
         await comentarioService.curtirComentario(comentarioId, user.id, token);
 
         const updatedComentarios = comentarios.map((comentario) => {
@@ -161,7 +156,7 @@ const PostComents = ({ post }) => {
     >
       <Box
         sx={{
-          width: "60%",
+          width: "50%",
           display: "flex",
           alignItems: "center",
           marginTop: 6,
@@ -190,7 +185,7 @@ const PostComents = ({ post }) => {
       </Box>
       <Box
         sx={{
-          width: "60%",
+          width: "50%",
           display: "flex",
           justifyContent: "flex-end",
         }}
@@ -204,7 +199,7 @@ const PostComents = ({ post }) => {
         </Button>
       </Box>
 
-      <Box sx={{ width: "60%" }}>
+      <Box sx={{ width: "50%" }}>
         {comentarios && comentarios.length > 0 ? (
           comentarios.map((comentario) => (
             <Card

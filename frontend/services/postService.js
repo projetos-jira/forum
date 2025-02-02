@@ -70,11 +70,11 @@ const postService = {
     }
   },
 
-  curtirPost: async (id, userId, token) => {
+  curtirPost: async (id, user_id, token) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}/curtir`,
-        { userId },
+        { user_id },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,14 +87,24 @@ const postService = {
     }
   },
 
-  removerCurtida: async (id, userId) => {
+  removerCurtida: async (id, userId, token) => {
     try {
-      const response = await axios.put(`${API_URL}/${id}/deletarCurtida`, {
-        userId,
-      });
+      const response = await axios.put(
+        `${API_URL}/${id}/removerCurtida`,
+        { user_id: userId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
-      throw new Error(error.response.data.erro || "Erro ao deletar curtida");
+      console.error("Erro ao descurtir post:", error);
+      if (error.response) {
+        console.error("Detalhes do erro:", error.response.data);
+      }
+      throw new Error(error.response?.data?.erro || "Erro ao descurtir post");
     }
   },
 };

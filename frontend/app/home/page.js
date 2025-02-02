@@ -19,7 +19,10 @@ const Home = () => {
   };
 
   return (
-    <Box component="main">
+    <Box
+      component="main"
+      sx={{ backgroundColor: "#232328", minHeight: "100vh" }}
+    >
       <Header searchInput={true} />
       <Box
         sx={{

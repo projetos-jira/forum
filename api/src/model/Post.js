@@ -22,14 +22,20 @@ class Post extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Usuario, { foreignKey: "user_id", as: "Usuario" });
+    this.belongsTo(models.User, {
+      foreignKey: "user_id",
+      as: "Usuario",
+      onDelete: "CASCADE",
+    });
     this.hasMany(models.Comentario, {
       foreignKey: "post_id",
       as: "Comentarios",
+      onDelete: "CASCADE",
     });
     this.hasMany(models.PostCurtidas, {
       foreignKey: "post_id",
       as: "Curtidas",
+      onDelete: "CASCADE",
     });
   }
 }

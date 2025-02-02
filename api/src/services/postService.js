@@ -1,8 +1,8 @@
 const Post = require("../model/Post");
-const Usuario = require("../model/User");
 const Comentario = require("../model/Comentario");
 const PostCurtidas = require("../model/PostCurtidas");
 const ComentarioCurtidas = require("../model/ComentarioCurtidas");
+const User = require("../model/User");
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id) => {
@@ -38,11 +38,19 @@ const postService = {
     }
     try {
       const posts = await Post.findAll({
-        include: {
-          model: Usuario,
-          as: "Usuario",
-          attributes: ["avatar", "apelido"],
-        },
+        include: [
+          {
+            model: User,
+            as: "Usuario",
+            attributes: ["id", "apelido"],
+          },
+
+          {
+            model: PostCurtidas,
+            as: "Curtidas",
+            attributes: ["user_id"],
+          },
+        ],
         order,
         limit,
       });
@@ -75,30 +83,37 @@ const postService = {
         where: { id },
         include: [
           {
-            model: Usuario,
+            model: User,
             as: "Usuario",
             attributes: ["apelido", "avatar"],
           },
           {
             model: Comentario,
             as: "Comentarios",
-            attributes: ["conteudo", "createdAt", "qtd_curtidas", "id"],
-            include: {
-              model: Usuario,
-              as: "Usuario",
-              attributes: ["apelido", "avatar"],
-            },
-            include: {
-              model: ComentarioCurtidas,
-              as: "Curtidas",
-              attributes: ["user_id"],
-            },
+            attributes: ["conteudo", "qtd_curtidas", "id", "createdAt"],
+            include: [
+              {
+                model: User,
+                as: "Usuario",
+                attributes: ["apelido", "avatar"],
+              },
+              {
+                model: ComentarioCurtidas,
+                as: "Curtidas",
+                attributes: ["user_id"],
+              },
+            ],
+            order: [["createdAt", "DESC"]],
           },
+
           {
             model: PostCurtidas,
             as: "Curtidas",
             attributes: ["user_id"],
           },
+        ],
+        order: [
+          [{ model: Comentario, as: "Comentarios" }, "createdAt", "DESC"],
         ],
       });
 
@@ -127,7 +142,7 @@ const postService = {
       const post = await Post.findByPk(post_id);
       if (!post) return { erro: "Post não encontrado." };
 
-      const user = await Usuario.findByPk(user_id);
+      const user = await User.findByPk(user_id);
       if (!user) return { erro: "Usuário não encontrado." };
       const userJaCurtiu = await PostCurtidas.findOne({
         where: { post_id, user_id },
@@ -152,7 +167,7 @@ const postService = {
     try {
       const post = await Post.findByPk(id);
       if (!post) return { erro: "Post não encontrado." };
-      const user = await Usuario.findByPk(userId);
+      const user = await User.findByPk(userId);
       if (!user) return { erro: "Usuário não encontrado." };
 
       const curtida = await PostCurtidas.findOne({

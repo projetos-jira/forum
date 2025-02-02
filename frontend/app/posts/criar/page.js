@@ -16,7 +16,10 @@ const CriarPost = () => {
     }
   };
   return (
-    <Box component="main" sx={{ backgroundColor: "#232328" }}>
+    <Box
+      component="main"
+      sx={{ backgroundColor: "#232328", minHeight: "100vh" }}
+    >
       <Header />
       <PostForm titulo={"Criar post"} onSubmit={criarPost} />
       <Footer />

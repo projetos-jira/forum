@@ -1,27 +1,28 @@
 const Sequelize = require("sequelize");
-const dbConfig = require("../config/database.js");
+const dbConfig = require("../config/database");
 
-const Usuario = require("../model/User.js");
-const Post = require("../model/Post.js");
-const Comentario = require("../model/Comentario.js");
-const PostCurtidas = require("../model/PostCurtidas.js");
-const ComentarioCurtidas = require("../model/ComentarioCurtidas.js");
+const User = require("../model/User");
+const Post = require("../model/Post");
+const Comentario = require("../model/Comentario");
+const PostCurtidas = require("../model/PostCurtidas");
+const ComentarioCurtidas = require("../model/ComentarioCurtidas");
 
 const connection = new Sequelize(dbConfig);
 
 try {
   connection.authenticate();
+  console.log("Connection has been established successfully.");
 } catch (err) {
-  console.log(err);
+  console.error("Unable to connect to the database:", err);
 }
 
-Usuario.init(connection);
+User.init(connection);
 Post.init(connection);
 Comentario.init(connection);
 PostCurtidas.init(connection);
 ComentarioCurtidas.init(connection);
 
-Usuario.associate(connection.models);
+User.associate(connection.models);
 Post.associate(connection.models);
 Comentario.associate(connection.models);
 PostCurtidas.associate(connection.models);

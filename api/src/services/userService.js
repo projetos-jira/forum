@@ -113,7 +113,15 @@ const userService = {
       const user = await User.findByPk(id, {
         include: {
           association: "Posts",
-          attributes: ["id", "titulo", "conteudo", "createdAt", "updatedAt"],
+          attributes: [
+            "id",
+            "titulo",
+            "conteudo",
+            "createdAt",
+            "updatedAt",
+            "qtd_curtidas",
+          ],
+          order: [["createdAt", "DESC"]],
         },
       });
       if (!user) return { erro: "Usuário não encontrado." };

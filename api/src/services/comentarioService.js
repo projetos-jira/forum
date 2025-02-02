@@ -28,7 +28,6 @@ const comentarioService = {
       const user = await Usuario.findByPk(user_id);
       if (!user) return { erro: "Usuário não encontrado." };
       const comentario = await Comentario.findByPk(comentario_id);
-      if (!comentario) return { erro: "Comentário não encontrado." };
       const userJaCurtiu = await ComentarioCurtidas.findOne({
         where: { comentario_id, user_id },
       });
@@ -50,7 +49,6 @@ const comentarioService = {
 
     try {
       const comentario = await Comentario.findByPk(comentario_id);
-      if (!comentario) return { erro: "Comentario não encontrado." };
       const user = await Usuario.findByPk(user_id);
       if (!user) return { erro: "Usuário não encontrado." };
 
