@@ -11,14 +11,11 @@ const Profile = () => {
   const fetchUserPosts = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser.user.id;
-      const token = storedUser.token;
-      const data = await userService.listPosts(userId, token);
-
+      const userId = storedUser.id;
+      const data = await userService.listarPosts(userId);
       return Array.isArray(data.Posts) ? data.Posts : [];
     } catch (error) {
-      console.error(error);
-      return [];
+      throw new Error(error.message);
     }
   };
   return (

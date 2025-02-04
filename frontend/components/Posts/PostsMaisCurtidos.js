@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -7,14 +9,20 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import postService from "../../services/postService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PostsMaisCurtidosSkeleton from "../Skeletons/PostsMaisCurtidosSkeleton";
+import { useRouter } from "next/navigation";
+import postService from "../../services/postService";
 
 const MaisCurtidos = () => {
   const [posts, setPosts] = useState([]);
-  const [alert, setAlert] = useState({});
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+    open: false,
+  });
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -43,6 +51,7 @@ const MaisCurtidos = () => {
 
   const renderedPosts = posts.map((post) => (
     <Card
+      onClick={() => router.push(`/posts/${post.id}`)}
       key={post.id}
       sx={{
         marginBottom: 2,
@@ -79,6 +88,7 @@ const MaisCurtidos = () => {
       </CardContent>
     </Card>
   ));
+  
   return (
     <Box
       sx={{

@@ -10,15 +10,9 @@ import postService from "../../../../services/postService";
 const EditarPost = () => {
   const { id } = useParams();
 
-  const editarPost = async (id, titulo, conteudo, userId, token) => {
+  const editarPost = async (id, titulo, conteudo, userId) => {
     try {
-      const data = await postService.editarPost(
-        id,
-        titulo,
-        conteudo,
-        userId,
-        token
-      );
+      const data = await postService.editarPost(id, titulo, conteudo, userId);
       return data;
     } catch (error) {
       throw new Error(error.message);

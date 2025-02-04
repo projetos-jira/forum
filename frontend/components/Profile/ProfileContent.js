@@ -1,5 +1,4 @@
-"use client";
-
+import { useState, useEffect } from "react";
 import {
   Box,
   Avatar,
@@ -9,7 +8,6 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
-import { useState, useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import userService from "../../services/userService";
 
@@ -43,18 +41,20 @@ const ProfileContent = () => {
     profissao: "",
     senha: "",
   });
-  const [open, setOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("");
+  const [alert, setAlert] = useState({
+    message: "",
+    severity: "",
+    open: false,
+  });
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     setUser(storedUser);
     setFormulario({
-      nome: storedUser.user.nome || "",
-      email: storedUser.user.email || "",
-      apelido: storedUser.user.apelido || "",
-      profissao: storedUser.user.profissao || "",
+      nome: storedUser.nome || "",
+      email: storedUser.email || "",
+      apelido: storedUser.apelido || "",
+      profissao: storedUser.profissao || "",
       senha: "",
     });
   }, []);
@@ -64,36 +64,36 @@ const ProfileContent = () => {
     const { nome, email, apelido, profissao, senha } = formulario;
 
     try {
-      const data = await userService.update(
-        user.user.id,
+      await userService.atualizarUser(
+        user.id,
         nome,
         email,
         senha,
         apelido,
-        profissao,
-        user.token
+        profissao
       );
 
       const updatedUser = {
-        token: user.token,
-        user: {
-          id: user.user.id,
-          nome,
-          email,
-          apelido,
-          profissao,
-        },
+        id: user.id,
+        nome,
+        email,
+        apelido,
+        profissao,
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
-      setAlertMessage(data.message);
-      setAlertSeverity("success");
-      setOpen(true);
+      setAlert({
+        message: "Perfil atualizado com sucesso!",
+        severity: "success",
+        open: true,
+      });
     } catch (error) {
-      setAlertMessage(error.message);
-      setAlertSeverity("error");
-      setOpen(true);
+      setAlert({
+        message: error.message,
+        severity: "error",
+        open: true,
+      });
     }
   };
 
@@ -109,7 +109,7 @@ const ProfileContent = () => {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setAlert({ ...alert, open: false });
   };
 
   return (
@@ -218,17 +218,17 @@ const ProfileContent = () => {
         </Button>
       </Box>
       <Snackbar
-        open={open}
-        autoHideDuration={3000}
+        open={alert.open}
+        autoHideDuration={6000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Alert
           onClose={handleClose}
-          severity={alertSeverity}
+          severity={alert.severity}
           sx={{ width: "100%" }}
         >
-          {alertMessage}
+          {alert.message}
         </Alert>
       </Snackbar>
     </Box>

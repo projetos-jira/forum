@@ -13,14 +13,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import postsSkeleton from "../Skeletons/PostsSkeleton";
-import postService from "../../services/postService";
 import { useRouter } from "next/navigation";
+import postService from "../../services/postService";
 
 const Posts = ({ width, fetchPosts, profilePost }) => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
-  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState({
     message: "",
     severity: "",
@@ -31,18 +30,15 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const user = storedUser.user;
-    const token = storedUser.token;
+    const user = storedUser;
     setUser(user);
-    setToken(token);
   }, []);
 
   useEffect(() => {
     const fetchPostsData = async () => {
       try {
         const data = await fetchPosts();
-        const postsArray = Array.isArray(data) ? data : [data];
-        setPosts(postsArray);
+        setPosts(data);
       } catch (error) {
         setAlert({
           message: "Erro ao carregar posts",
@@ -67,10 +63,11 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
     ev.stopPropagation();
     router.push(`/posts/editar/${postId}`);
   };
+
   const handleDelete = async (postId, ev) => {
     ev.stopPropagation();
     try {
-      await postService.deletarPost(postId, token);
+      await postService.deletarPost(postId);
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
       setAlert({
         message: "Post deletado com sucesso!",
@@ -124,42 +121,40 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
           }}
         >
           {post.Usuario ? (
-            <>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Avatar
-                  sx={{
-                    marginRight: 1,
-                    color: "#2f2f34",
-                    height: 50,
-                    width: 50,
-                  }}
-                >
-                  {post.Usuario && post.Usuario.apelido
-                    ? post.Usuario.apelido[0].toUpperCase()
-                    : ""}
-                </Avatar>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
-                  <Typography variant="subtitle">
-                    @{post.Usuario.apelido}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {new Date(post.createdAt).toLocaleDateString()}
-                  </Typography>
-                </Box>
-              </Box>
-            </>
-          ) : (
-            <>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
-                src={`http://localhost:3000/usuarios/${user.id}/avatar`}
-                alt={user.apelido}
                 sx={{
                   marginRight: 1,
                   color: "#2f2f34",
                   height: 50,
                   width: 50,
                 }}
-              />
+              >
+                {post.Usuario.apelido
+                  ? post.Usuario.apelido[0].toUpperCase()
+                  : "U"}
+              </Avatar>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography variant="subtitle">
+                  @{post.Usuario.apelido}
+                </Typography>
+                <Typography variant="subtitle2">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </Typography>
+              </Box>
+            </Box>
+          ) : (
+            <>
+              <Avatar
+                sx={{
+                  marginRight: 1,
+                  color: "#2f2f34",
+                  height: 50,
+                  width: 50,
+                }}
+              >
+                {user.apelido[0].toUpperCase()}
+              </Avatar>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography variant="subtitle">@{user.apelido}</Typography>
                 <Typography variant="subtitle2">
@@ -167,7 +162,9 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
                 </Typography>
               </Box>
               {profilePost && (
-                <Box sx={{ marginLeft: "auto" }}>
+                <Box
+                  sx={{ width: "100%", display: "flex", justifyContent: "end" }}
+                >
                   <IconButton onClick={(ev) => handleEdit(post.id, ev)}>
                     <EditIcon sx={{ color: "#fff" }} />
                   </IconButton>
@@ -206,29 +203,27 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
     </Card>
   ));
   return (
-    <>
-      <Box
-        sx={{
-          width,
-        }}
-      >
-        {loading ? (
-          loadingPosts()
-        ) : posts.length === 0 ? (
-          <Typography
-            variant="h4"
-            sx={{
-              textAlign: "center",
-              m: 6,
-              color: "#fff",
-            }}
-          >
-            Nenhum post encontrado 👎.
-          </Typography>
-        ) : (
-          renderedPosts
-        )}
-      </Box>
+    <Box
+      sx={{
+        width,
+      }}
+    >
+      {loading ? (
+        loadingPosts()
+      ) : posts.length === 0 ? (
+        <Typography
+          variant="h4"
+          sx={{
+            textAlign: "center",
+            m: 6,
+            color: "#fff",
+          }}
+        >
+          Nenhum post encontrado 👎.
+        </Typography>
+      ) : (
+        renderedPosts
+      )}
       <Snackbar
         open={alert.open}
         autoHideDuration={6000}
@@ -243,7 +238,7 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
           {alert.message}
         </Alert>
       </Snackbar>
-    </>
+    </Box>
   );
 
   function loadingPosts() {

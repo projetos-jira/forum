@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Box, InputBase, Typography, Button, Link } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, InputBase, Typography, Link } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 
 const Header = ({ searchInput }) => {
-  const [userName, setUserName] = useState("");
+  const [apelido, setApelido] = useState("");
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const user = storedUser.user;
-    setUserName(user.apelido);
+    const apelido = storedUser.apelido;
+    setApelido(apelido);
   }, []);
 
   return (
@@ -130,7 +130,7 @@ const Header = ({ searchInput }) => {
         variant="subtitle1"
         sx={{ color: "#fff", marginRight: "100px" }}
       >
-        Olá, <strong>{`@${userName}`}</strong>
+        Olá, <strong>{`@${apelido}`}</strong>
       </Typography>
     </Box>
   );

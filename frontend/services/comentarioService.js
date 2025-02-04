@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:3001";
+const token = JSON.parse(localStorage.getItem("token"));
 
 const comentarioService = {
   criarComentario: async (post_id, conteudo, user_id) => {
@@ -10,13 +11,13 @@ const comentarioService = {
         { conteudo, user_id, post_id },
         {
           headers: {
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       return response.data;
     } catch (error) {
-      return { erro: error.response ? error.response.data : error.message };
+      throw new Error(error.response.data.erro || "Erro ao criar comentário");
     }
   },
 
@@ -27,11 +28,11 @@ const comentarioService = {
       );
       return response.data;
     } catch (error) {
-      return { erro: error.response ? error.response.data : error.message };
+      throw new Error(error.response.data.erro || "Erro ao buscar comentários");
     }
   },
 
-  curtirComentario: async (comentarioId, user_id, token) => {
+  curtirComentario: async (comentarioId, user_id) => {
     try {
       const response = await axios.put(
         `${API_URL}/posts/comentarios/${comentarioId}/curtir`,
@@ -48,7 +49,7 @@ const comentarioService = {
     }
   },
 
-  descurtirComentario: async (comentarioId, user_id, token) => {
+  descurtirComentario: async (comentarioId, user_id) => {
     try {
       const response = await axios.put(
         `${API_URL}/posts/comentarios/${comentarioId}/removerCurtida`,
@@ -63,25 +64,6 @@ const comentarioService = {
     } catch (error) {
       throw new Error(
         error.response.data.erro || "Erro ao descurtir comentário"
-      );
-    }
-  },
-
-  verificarCurtidaComentario: async (comentarioId, userId, token) => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/${comentarioId}/verificarCurtida`,
-        { userId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data.curtido;
-    } catch (error) {
-      throw new Error(
-        error.response.data.erro || "Erro ao verificar curtida do comentário"
       );
     }
   },

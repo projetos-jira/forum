@@ -7,9 +7,9 @@ import PostForm from "../../../components/Posts/PostForm";
 import postService from "../../../services/postService";
 
 const CriarPost = () => {
-  const criarPost = async (titulo, conteudo, userId, token) => {
+  const criarPost = async (titulo, conteudo, userId) => {
     try {
-      const data = await postService.criarPost(titulo, conteudo, userId, token);
+      const data = await postService.criarPost(titulo, conteudo, userId);
       return data;
     } catch (error) {
       throw new Error(error.message);

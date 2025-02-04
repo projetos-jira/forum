@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,55 +15,46 @@ import postService from "../../services/postService";
 
 const PostDetails = ({ post }) => {
   const [user, setUser] = useState({});
-  const [token, setToken] = useState(null);
   const [alert, setAlert] = useState({
     message: "",
     severity: "",
     open: false,
   });
-
   const [curtido, setCurtido] = useState(false);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser.user);
-      setToken(storedUser.token);
-    }
+    setUser(storedUser);
   }, []);
 
   useEffect(() => {
-    if (post && user?.id) {
-      const liked = (post.Curtidas || []).some(
-        (curtida) => curtida.user_id === user.id
-      );
-      setCurtido(liked);
+    if (post?.Curtidas?.length && user?.id) {
+      setCurtido(post.Curtidas.some((curtida) => curtida.user_id === user.id));
     }
-  }, [post, user]);
+  }, [post?.Curtidas, user?.id]);
 
   const handleCurtirPost = async () => {
     if (!post) return;
 
     try {
-      const isLiked = (post.Curtidas || []).some(
+      const foiCurtido = (post.Curtidas || curtido(true) || []).some(
         (curtida) => curtida.user_id === user.id
       );
 
-      if (isLiked) {
-        await postService.removerCurtida(post.id, user.id, token);
+      if (foiCurtido) {
+        await postService.removerCurtida(post.id, user.id);
         post.qtd_curtidas -= 1;
         post.Curtidas = post.Curtidas.filter(
           (curtida) => curtida.user_id !== user.id
         );
         setCurtido(false);
       } else {
-        await postService.curtirPost(post.id, user.id, token);
+        await postService.curtirPost(post.id, user.id);
         post.qtd_curtidas += 1;
         post.Curtidas.push({ user_id: user.id });
         setCurtido(true);
       }
     } catch (error) {
-      console.error(error);
       setAlert({
         message: error.message,
         severity: "error",
@@ -76,8 +67,6 @@ const PostDetails = ({ post }) => {
     if (reason === "clickaway") return;
     setAlert({ ...alert, open: false });
   };
-
-  if (!post) return <Typography>Carregando...</Typography>;
 
   return (
     <Box
@@ -95,7 +84,7 @@ const PostDetails = ({ post }) => {
         }}
       >
         <CardContent sx={{ color: "#fff", padding: 6 }}>
-          <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
+          <Box display="flex" sx={{ mb: 2 }}>
             <Avatar
               sx={{
                 marginRight: 1,

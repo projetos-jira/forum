@@ -10,9 +10,9 @@ import {
   Alert,
 } from "@mui/material";
 import Link from "next/link";
-import userService from "../../services/userService";
 import { useRouter } from "next/navigation";
 import { makeStyles } from "@mui/styles";
+import userService from "../../services/userService";
 
 const useStyles = makeStyles({
   textField: {
@@ -56,17 +56,10 @@ const Login = () => {
         formulario.email,
         formulario.senha
       );
-      const userData = {
-        token: response.token,
-        user: {
-          id: response.user.id,
-          nome: response.user.nome,
-          email: response.user.email,
-          apelido: response.user.apelido,
-          profissao: response.user.profissao,
-        },
-      };
-      localStorage.setItem("user", JSON.stringify(userData));
+
+      localStorage.setItem("user", JSON.stringify(response.user));
+      localStorage.setItem("token", JSON.stringify(response.token));
+
       setAlert({
         message: "Login efetuado com sucesso!",
         severity: "success",
@@ -100,69 +93,63 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#232328",
-          paddingTop: 6,
-          height: "100vh",
-        }}
-      >
-        <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
-          Login
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ mt: 3, width: 500 }}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#232328",
+        paddingTop: 6,
+        height: "100vh",
+      }}
+    >
+      <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
+        Login
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: 500 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={formulario.email}
+          onChange={handleChange}
+          variant="filled"
+          className={classes.textField}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="senha"
+          label="Senha"
+          type="password"
+          id="senha"
+          autoComplete="current-password"
+          value={formulario.senha}
+          onChange={handleChange}
+          variant="filled"
+          className={classes.textField}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          size="large"
+          sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={formulario.email}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="senha"
-            label="Senha"
-            type="password"
-            id="senha"
-            autoComplete="current-password"
-            value={formulario.senha}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size="large"
-            sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
-          >
-            Entrar
-          </Button>
-          <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
-            Não possui uma conta?{" "}
-            <Link style={{ color: "#4468CF" }} href="/">
-              Cadastre-se
-            </Link>
-          </Typography>
-        </Box>
+          Entrar
+        </Button>
+        <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
+          Não possui uma conta?{" "}
+          <Link style={{ color: "#4468CF" }} href="/">
+            Cadastre-se
+          </Link>
+        </Typography>
       </Box>
       <Snackbar
         open={alert.open}
@@ -178,7 +165,7 @@ const Login = () => {
           {alert.message}
         </Alert>
       </Snackbar>
-    </>
+    </Box>
   );
 };
 

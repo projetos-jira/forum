@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -7,15 +8,13 @@ import {
   Button,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
-import { useState, useEffect } from "react";
-import comentarioService from "../../services/comentarioService";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Snackbar, Alert } from "@mui/material";
+import comentarioService from "../../services/comentarioService";
 
 const PostComents = ({ post }) => {
   const [user, setUser] = useState({});
-  const [token, setToken] = useState(null);
   const [comentarios, setComentarios] = useState(post.Comentarios || []);
   const [novoComentario, setNovoComentario] = useState("");
   const [alert, setAlert] = useState({
@@ -25,16 +24,10 @@ const PostComents = ({ post }) => {
   });
 
   useEffect(() => {
-    if (post && post.Comentarios) {
-      setComentarios(post.Comentarios);
-    }
-  }, [post]);
-
-  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    setToken(storedUser.token);
-    setUser(storedUser.user);
-  }, []);
+    setUser(storedUser);
+    if (post && post.Comentarios) setComentarios(post.Comentarios);
+  }, [post]);
 
   const handleAdicionarComentario = async () => {
     if (novoComentario.trim() === "") {
@@ -91,11 +84,7 @@ const PostComents = ({ post }) => {
       );
 
       if (isCurtido) {
-        await comentarioService.descurtirComentario(
-          comentarioId,
-          user.id,
-          token
-        );
+        await comentarioService.descurtirComentario(comentarioId, user.id);
 
         const updatedComentarios = comentarios.map((comentario) => {
           if (comentario.id === comentarioId) {
@@ -112,7 +101,7 @@ const PostComents = ({ post }) => {
 
         setComentarios(updatedComentarios);
       } else {
-        await comentarioService.curtirComentario(comentarioId, user.id, token);
+        await comentarioService.curtirComentario(comentarioId, user.id);
 
         const updatedComentarios = comentarios.map((comentario) => {
           if (comentario.id === comentarioId) {
@@ -124,7 +113,6 @@ const PostComents = ({ post }) => {
           }
           return comentario;
         });
-
         setComentarios(updatedComentarios);
       }
     } catch (error) {
@@ -165,9 +153,7 @@ const PostComents = ({ post }) => {
         <Avatar
           sx={{ marginRight: 1, color: "#2f2f34", height: 50, width: 50 }}
         >
-          {user && user.apelido && user.apelido[0]
-            ? user.apelido[0].toUpperCase()
-            : "U"}
+          {user.apelido ? user.apelido[0].toUpperCase() : "U"}
         </Avatar>
         <Textarea
           variant="plain"
@@ -259,7 +245,7 @@ const PostComents = ({ post }) => {
           ))
         ) : (
           <Typography variant="h4" sx={{ color: "#fff", textAlign: "center" }}>
-            Nenhum comentário ainda.
+            Nenhum comentário ainda 👎.
           </Typography>
         )}
       </Box>

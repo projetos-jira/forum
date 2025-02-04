@@ -1,9 +1,10 @@
 import axios from "axios";
 
 const API_URL = "http://localhost:3001/posts";
+const token = JSON.parse(localStorage.getItem("token"));
 
 const postService = {
-  criarPost: async (titulo, conteudo, user_id, token) => {
+  criarPost: async (titulo, conteudo, user_id) => {
     try {
       const response = await axios.post(
         API_URL,
@@ -31,7 +32,7 @@ const postService = {
     }
   },
 
-  editarPost: async (id, titulo, conteudo, token) => {
+  editarPost: async (id, titulo, conteudo) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}`,
@@ -57,7 +58,7 @@ const postService = {
     }
   },
 
-  deletarPost: async (id, token) => {
+  deletarPost: async (id) => {
     try {
       const response = await axios.delete(`${API_URL}/${id}`, {
         headers: {
@@ -70,7 +71,7 @@ const postService = {
     }
   },
 
-  curtirPost: async (id, user_id, token) => {
+  curtirPost: async (id, user_id) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}/curtir`,
@@ -87,7 +88,7 @@ const postService = {
     }
   },
 
-  removerCurtida: async (id, userId, token) => {
+  removerCurtida: async (id, userId) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}/removerCurtida`,
@@ -100,10 +101,6 @@ const postService = {
       );
       return response.data;
     } catch (error) {
-      console.error("Erro ao descurtir post:", error);
-      if (error.response) {
-        console.error("Detalhes do erro:", error.response.data);
-      }
       throw new Error(error.response?.data?.erro || "Erro ao descurtir post");
     }
   },

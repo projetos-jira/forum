@@ -31,15 +31,14 @@ const Post = () => {
       component="main"
       sx={{
         backgroundColor: "#232328",
-        minHeight: "100vh",
       }}
     >
       <Header />
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
           flexDirection: "column",
+          minHeight: "100vh",
         }}
       >
         <PostDetails post={post} />

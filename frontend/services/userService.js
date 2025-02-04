@@ -2,6 +2,8 @@ import axios from "axios";
 
 const API_URL = "http://localhost:3001/users";
 
+const token = JSON.parse(localStorage.getItem("token"));
+
 const userService = {
   register: async (nome, email, senha, apelido) => {
     try {
@@ -26,7 +28,7 @@ const userService = {
     }
   },
 
-  update: async (id, nome, email, senha, apelido, profissao, token) => {
+  atualizarUser: async (id, nome, email, senha, apelido, profissao) => {
     try {
       const response = await axios.put(
         `${API_URL}/${id}`,
@@ -43,7 +45,7 @@ const userService = {
     }
   },
 
-  listPosts: async (id, token) => {
+  listarPosts: async (id) => {
     try {
       const response = await axios.get(`${API_URL}/posts/${id}`, {
         headers: {

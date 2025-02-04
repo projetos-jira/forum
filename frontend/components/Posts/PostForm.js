@@ -8,8 +8,8 @@ import {
   Alert,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import postService from "../../services/postService";
 import { useRouter } from "next/navigation";
+import postService from "../../services/postService";
 
 const useStyles = makeStyles({
   textField: {
@@ -34,8 +34,7 @@ const useStyles = makeStyles({
 const PostForm = ({ titulo, onSubmit, id }) => {
   const classes = useStyles();
   const router = useRouter();
-  const [userId, setUserId] = useState(null);
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState({});
   const [formulario, setFormulario] = useState({
     titulo: "",
     conteudo: "",
@@ -48,10 +47,8 @@ const PostForm = ({ titulo, onSubmit, id }) => {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-    const userId = storedUser.user.id;
-    const token = storedUser.token;
-    setUserId(userId);
-    setToken(token);
+    const user = storedUser;
+    setUser(user);
 
     const fetchPostData = async () => {
       if (id === undefined) return;
@@ -79,12 +76,11 @@ const PostForm = ({ titulo, onSubmit, id }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const { titulo, conteudo } = formulario;
 
       if (id !== undefined) {
-        await onSubmit(id, titulo, conteudo, token);
+        await onSubmit(id, titulo, conteudo);
         setAlert({
           message: "Post atualizado com sucesso!",
           severity: "success",
@@ -95,7 +91,7 @@ const PostForm = ({ titulo, onSubmit, id }) => {
         }, 2000);
         return;
       }
-      await onSubmit(titulo, conteudo, userId, token);
+      await onSubmit(titulo, conteudo, user.id);
       setAlert({
         message: "Post criado com sucesso!",
         severity: "success",
@@ -122,63 +118,57 @@ const PostForm = ({ titulo, onSubmit, id }) => {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          backgroundColor: "#232328",
-          margin: 6,
-          height: "70vh",
-        }}
-      >
-        <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
-          {titulo}
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ mt: 2, width: 500 }}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#232328",
+        margin: 6,
+        height: "70vh",
+      }}
+    >
+      <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
+        {titulo}
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: 500 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="titulo"
+          label="Título"
+          name="titulo"
+          autoComplete="titulo"
+          value={formulario.titulo}
+          onChange={handleChange}
+          variant="filled"
+          className={classes.textField}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="conteudo"
+          label="Conteúdo"
+          name="conteudo"
+          autoComplete="conteudo"
+          multiline
+          rows={10}
+          value={formulario.conteudo}
+          onChange={handleChange}
+          variant="filled"
+          className={classes.textField}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          size="large"
+          sx={{ mt: 2, fontWeight: "bold" }}
         >
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="titulo"
-            label="Título"
-            name="titulo"
-            autoComplete="titulo"
-            value={formulario.titulo}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="conteudo"
-            label="Conteúdo"
-            name="conteudo"
-            autoComplete="conteudo"
-            multiline
-            rows={10}
-            value={formulario.conteudo}
-            onChange={handleChange}
-            variant="filled"
-            className={classes.textField}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size="large"
-            sx={{ mt: 2, fontWeight: "bold" }}
-          >
-            {titulo.split(" ")[0].toUpperCase()}
-          </Button>
-        </Box>
+          {titulo.split(" ")[0].toUpperCase()}
+        </Button>
       </Box>
       <Snackbar
         open={alert.open}
@@ -194,7 +184,7 @@ const PostForm = ({ titulo, onSubmit, id }) => {
           {alert.message}
         </Alert>
       </Snackbar>
-    </>
+    </Box>
   );
 };
 
