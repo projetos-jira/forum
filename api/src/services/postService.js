@@ -12,6 +12,11 @@ const postService = {
     if (titulo.length < 3) {
       return { erro: "O título deve ter pelo menos 3 caracteres." };
     }
+
+    if (conteudo.length < 3) {
+      return { erro: "O conteúdo deve ter pelo menos 3 caracteres." };
+    }
+
     try {
       const post = await Post.create({ titulo, conteudo, user_id });
       return post;
@@ -61,9 +66,17 @@ const postService = {
   },
   atualizarPost: async (id, titulo, conteudo) => {
     if (!id) return { erro: "Envie o id do post." };
-    if (!titulo && !conteudo) {
+    if (!titulo && !conteudo)
       return { erro: "Envie pelo menos um campo para atualizar." };
+
+    if (titulo.length < 3) {
+      return { erro: "O título deve ter pelo menos 3 caracteres." };
     }
+
+    if (conteudo.length < 3) {
+      return { erro: "O conteúdo deve ter pelo menos 3 caracteres." };
+    }
+
     try {
       const post = await Post.findByPk(id);
       if (!post) return { erro: "Post não encontrado." };
