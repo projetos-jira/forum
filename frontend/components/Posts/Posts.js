@@ -181,6 +181,8 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
           sx={{
             mb: 2,
             fontWeight: "bold",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {post.titulo}
@@ -188,7 +190,13 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
         <Typography
           variant="h6"
           sx={{
-            fontWeight: "light",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "break-word",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical",
           }}
         >
           {post.conteudo}

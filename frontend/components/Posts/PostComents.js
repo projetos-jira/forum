@@ -6,12 +6,40 @@ import {
   CardContent,
   Avatar,
   Button,
+  TextField,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Snackbar, Alert } from "@mui/material";
 import comentarioService from "../../services/comentarioService";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  textField: {
+    "& .MuiFilledInput-root": {
+      backgroundColor: "#2f2f34",
+      "&:hover": {
+        backgroundColor: "#3a3a3f",
+      },
+      "&.Mui-focused": {
+        backgroundColor: "#3a3a3f",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      color: "#fff",
+    },
+    "& .MuiInputBase-input": {
+      color: "#fff",
+    },
+    "& .MuiInputBase-root": {
+      paddingTop: 0,
+    },
+    "& .MuiFilledInput-input": {
+      paddingTop: "10px",
+    },
+  },
+});
 
 const PostComents = ({ post }) => {
   const [user, setUser] = useState({});
@@ -22,6 +50,7 @@ const PostComents = ({ post }) => {
     severity: "",
     open: false,
   });
+  const classes = useStyles();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -155,18 +184,18 @@ const PostComents = ({ post }) => {
         >
           {user.apelido ? user.apelido[0].toUpperCase() : "U"}
         </Avatar>
-        <Textarea
-          variant="plain"
-          placeholder="Adicione um comentário..."
+        <TextField
+          variant="filled"
           size="lg"
           name="comentario"
-          minRows={1}
-          maxRows={4}
-          sx={{
-            width: "100%",
-          }}
+          placeholder="Adicione um comentário..."
+          multiline
+          minRows={3}
+          maxRows={10}
+          fullWidth
           value={novoComentario}
           onChange={(e) => setNovoComentario(e.target.value)}
+          className={classes.textField}
         />
       </Box>
       <Box
@@ -192,13 +221,22 @@ const PostComents = ({ post }) => {
               key={comentario.id}
               sx={{
                 width: "100%",
+
                 mt: 2,
+                padding: 2,
                 backgroundColor: "#2f2f34",
                 color: "#fff",
+                borderRadius: 6,
+                whiteSpace: "pre-line",
               }}
             >
               <CardContent>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   <Avatar
                     sx={{
                       marginRight: 1,
@@ -218,7 +256,14 @@ const PostComents = ({ post }) => {
                     </Typography>
                   </Box>
                 </Box>
-                <Typography variant="body1" sx={{ mt: 2 }}>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 2,
+                    whiteSpace: "pre-line",
+                    overflowWrap: "break-word",
+                  }}
+                >
                   {comentario.conteudo}
                 </Typography>
                 <Box
@@ -232,11 +277,11 @@ const PostComents = ({ post }) => {
                   {comentario.Curtidas.some(
                     (curtida) => curtida.user_id === user.id
                   ) ? (
-                    <FavoriteIcon sx={{ mt: 1 }} />
+                    <FavoriteIcon sx={{ mt: 2 }} />
                   ) : (
-                    <FavoriteBorderIcon sx={{ mt: 1 }} />
+                    <FavoriteBorderIcon sx={{ mt: 2 }} />
                   )}
-                  <Typography variant="h6" sx={{ ml: 2, mt: 0.5 }}>
+                  <Typography variant="h6" sx={{ ml: 2, mt: 1.5 }}>
                     {comentario.qtd_curtidas}
                   </Typography>
                 </Box>

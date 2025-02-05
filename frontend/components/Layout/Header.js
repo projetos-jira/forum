@@ -6,14 +6,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import PersonIcon from "@mui/icons-material/Person";
 
-const Header = ({ searchInput }) => {
+const Header = ({ searchInput, onSearchChange }) => {
   const [apelido, setApelido] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     const apelido = storedUser.apelido;
     setApelido(apelido);
   }, []);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+    onSearchChange(event.target.value);
+  };
 
   return (
     <Box
@@ -91,6 +97,8 @@ const Header = ({ searchInput }) => {
               />
               <InputBase
                 placeholder="Pesquisar…"
+                value={searchTerm}
+                onChange={handleChange}
                 sx={{
                   padding: "12px",
                   paddingLeft: "50px",

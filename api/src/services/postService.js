@@ -3,19 +3,21 @@ const Comentario = require("../model/Comentario");
 const PostCurtidas = require("../model/PostCurtidas");
 const ComentarioCurtidas = require("../model/ComentarioCurtidas");
 const User = require("../model/User");
+const { Op } = require("sequelize");
 
 const postService = {
   criarPost: async (titulo, conteudo, user_id) => {
-    if (!titulo || !conteudo || !user_id) {
+    if (!titulo || !conteudo || !user_id)
       return { erro: "Envie todos os campos obrigatórios." };
-    }
-    if (titulo.length < 3) {
-      return { erro: "O título deve ter pelo menos 3 caracteres." };
-    }
 
-    if (conteudo.length < 3) {
+    if (titulo.length < 3)
+      return { erro: "O título deve ter pelo menos 3 caracteres." };
+
+    if (titulo.length > 100)
+      return { erro: "O título deve ter no máximo 100 caracteres." };
+
+    if (conteudo.length < 3)
       return { erro: "O conteúdo deve ter pelo menos 3 caracteres." };
-    }
 
     try {
       const post = await Post.create({ titulo, conteudo, user_id });
@@ -24,9 +26,10 @@ const postService = {
       return { erro: error.message };
     }
   },
-  listarPosts: async (filtro) => {
+  listarPosts: async (filtro, searchTerm = "") => {
     let order;
-    let limit = 10;
+    let limit;
+
     switch (filtro) {
       case "mais-curtidos":
         order = [["qtd_curtidas", "DESC"]];
@@ -35,14 +38,15 @@ const postService = {
       case "asc":
         order = [["createdAt", "ASC"]];
         break;
-      case "desc":
-        order = [["createdAt", "DESC"]];
-        break;
       default:
         order = [["createdAt", "DESC"]];
     }
     try {
       const posts = await Post.findAll({
+        where: {
+          titulo: { [Op.like]: `%${searchTerm}%` },
+        },
+
         include: [
           {
             model: User,
@@ -69,13 +73,14 @@ const postService = {
     if (!titulo && !conteudo)
       return { erro: "Envie pelo menos um campo para atualizar." };
 
-    if (titulo.length < 3) {
+    if (titulo.length < 3)
       return { erro: "O título deve ter pelo menos 3 caracteres." };
-    }
 
-    if (conteudo.length < 3) {
+    if (titulo.length > 100)
+      return { erro: "O título deve ter no máximo 100 caracteres." };
+
+    if (conteudo.length < 3)
       return { erro: "O conteúdo deve ter pelo menos 3 caracteres." };
-    }
 
     try {
       const post = await Post.findByPk(id);

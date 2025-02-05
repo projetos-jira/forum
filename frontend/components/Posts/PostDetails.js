@@ -105,14 +105,25 @@ const PostDetails = ({ post }) => {
             </Box>
           </Box>
 
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: "bold" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 2,
+              fontWeight: "bold",
+              whiteSpace: "normal",
+              wordWrap: "break-word",
+            }}
+          >
             {post.titulo}
           </Typography>
-          <Typography variant="h6" sx={{ fontWeight: "light" }}>
+          <Typography
+            variant="h6"
+            sx={{ whiteSpace: "pre-line", overflowWrap: "break-word" }}
+          >
             {post.conteudo}
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
             <IconButton onClick={handleCurtirPost}>
               {post.Curtidas?.some((curtida) => curtida.user_id === user.id) ? (
                 <FavoriteIcon sx={{ color: "white" }} />
@@ -120,7 +131,7 @@ const PostDetails = ({ post }) => {
                 <FavoriteBorderIcon sx={{ color: "white" }} />
               )}
             </IconButton>
-            <Typography variant="h6" sx={{ ml: 1, mt: 1 }}>
+            <Typography variant="h6" sx={{ ml: 1, mt: 0.5 }}>
               {post.qtd_curtidas}
             </Typography>
           </Box>

@@ -27,7 +27,7 @@ const MaisCurtidos = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await postService.listarPosts("mais-curtidos");
+        const data = await postService.listarPosts(null, "mais-curtidos");
         setPosts(data);
       } catch (error) {
         setAlert({
@@ -88,7 +88,7 @@ const MaisCurtidos = () => {
       </CardContent>
     </Card>
   ));
-  
+
   return (
     <Box
       sx={{

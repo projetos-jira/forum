@@ -199,6 +199,10 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  */
 router.put("/:id/curtir", authMiddleware, postController.curtirPost);
 
-router.put("/:id/removerCurtida", postController.removerCurtida);
+router.put(
+  "/:id/removerCurtida",
+  authMiddleware,
+  postController.removerCurtida
+);
 
 module.exports = router;

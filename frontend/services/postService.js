@@ -21,17 +21,16 @@ const postService = {
     }
   },
 
-  listarPosts: async (filtro) => {
+  listarPosts: async (searchTerm = "", filtro) => {
     try {
       const response = await axios.get(API_URL, {
-        params: { filtro },
+        params: { filtro, searchTerm },
       });
       return response.data;
     } catch (error) {
       throw new Error(error.response.data.erro || "Erro ao listar posts");
     }
   },
-
   editarPost: async (id, titulo, conteudo) => {
     try {
       const response = await axios.put(

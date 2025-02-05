@@ -13,9 +13,9 @@ const postController = {
     }
   },
   listarPosts: async (req, res) => {
-    const { filtro } = req.query;
+    const { filtro, searchTerm = "" } = req.query;
     try {
-      const posts = await postService.listarPosts(filtro);
+      const posts = await postService.listarPosts(filtro, searchTerm);
       if (posts.erro) return res.status(400).json(posts);
 
       return res.status(200).json(posts);
