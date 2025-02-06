@@ -61,6 +61,7 @@ const MaisCurtidos = () => {
         "&:hover": {
           transform: "scale(1.05)",
         },
+        padding: 1,
       }}
     >
       <CardContent>
@@ -68,22 +69,35 @@ const MaisCurtidos = () => {
           <Typography
             variant="h6"
             sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
               textAlign: "center",
               color: "#fff",
             }}
           >
             {post.titulo}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              mt: 1,
+            }}
+          >
             <FavoriteIcon
               sx={{
                 color: "#fff",
                 position: "relative",
-                top: 6,
                 ml: 1,
                 mr: 1,
               }}
             />
-            {post.qtd_curtidas}
-          </Typography>
+            <Typography variant="body2" sx={{ color: "#fff" }}>
+              {post.qtd_curtidas}
+            </Typography>
+          </Box>
         </Box>
       </CardContent>
     </Card>
@@ -92,10 +106,10 @@ const MaisCurtidos = () => {
   return (
     <Box
       sx={{
-        height: "70vh",
+        height: "100%",
+        padding: 6,
         backgroundColor: "#2f2f34",
         borderRadius: 8,
-        padding: 6,
         ml: 6,
         mt: 6,
         width: "20%",

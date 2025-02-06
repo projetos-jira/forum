@@ -164,7 +164,7 @@ const Cadastro = () => {
           size="large"
           sx={{ mt: 3, mb: 2, fontWeight: "bold" }}
         >
-          Entrar
+          Cadastrar
         </Button>
         <Typography variant="body2" align="center" sx={{ color: "#fff" }}>
           Já tem uma conta?{" "}

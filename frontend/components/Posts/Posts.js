@@ -185,6 +185,7 @@ const Posts = ({ width, fetchPosts, profilePost, onPostDelete }) => {
             fontWeight: "bold",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
           {post.titulo}
