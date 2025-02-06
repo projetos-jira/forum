@@ -15,8 +15,9 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import postsSkeleton from "../Skeletons/PostsSkeleton";
 import { useRouter } from "next/navigation";
 import postService from "../../services/postService";
+import formatarData from "../../utils/formatarData";
 
-const Posts = ({ width, fetchPosts, profilePost }) => {
+const Posts = ({ width, fetchPosts, profilePost, onPostDelete }) => {
   const [posts, setPosts] = useState([]);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
@@ -39,9 +40,6 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
       try {
         const data = await fetchPosts();
         setPosts(data);
-        if (profilePost) {
-          localStorage.setItem("posts", JSON.stringify(data));
-        }
       } catch (error) {
         setAlert({
           message: "Erro ao carregar posts",
@@ -71,7 +69,8 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
     ev.stopPropagation();
     try {
       await postService.deletarPost(postId);
-      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      const updatedPosts = await fetchPosts();
+      setPosts(updatedPosts);
       setAlert({
         message: "Post deletado com sucesso!",
         severity: "success",
@@ -142,7 +141,7 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
                   @{post.Usuario.apelido}
                 </Typography>
                 <Typography variant="subtitle2">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                  {formatarData(post.createdAt)}
                 </Typography>
               </Box>
             </Box>
@@ -160,8 +159,8 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
               </Avatar>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography variant="subtitle">@{user.apelido}</Typography>
-                <Typography variant="subtitle2">
-                  {new Date(post.createdAt).toLocaleDateString()}
+                <Typography variant="subtitle2" sx={{ minWidth: "500px" }}>
+                  {formatarData(post.createdAt)}
                 </Typography>
               </Box>
               {profilePost && (

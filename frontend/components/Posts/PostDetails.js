@@ -12,6 +12,7 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import postService from "../../services/postService";
+import formatarData from "../../utils/formatarData";
 
 const PostDetails = ({ post }) => {
   const [user, setUser] = useState({});
@@ -95,12 +96,18 @@ const PostDetails = ({ post }) => {
             >
               {post.Usuario?.apelido[0].toUpperCase()}
             </Avatar>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
               <Typography variant="subtitle">
                 @{post.Usuario?.apelido}
               </Typography>
               <Typography variant="subtitle2">
-                {new Date(post.createdAt).toLocaleDateString()}
+                {formatarData(post.createdAt)}
               </Typography>
             </Box>
           </Box>

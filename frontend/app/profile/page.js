@@ -7,25 +7,28 @@ import ProfileContent from "../../components/Profile/ProfileContent";
 import Posts from "../../components/Posts/Posts";
 import AddPostButton from "../../components/Buttons/AddPostButton";
 import userService from "../../services/userService";
+import PostCount from "../../components/Profile/PostCount";
 
 const Profile = () => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const posts = JSON.parse(localStorage.getItem("posts"));
-    setPosts(posts);
-  }, []);
+  const [postCount, setPostCount] = useState(0);
 
   const fetchUserPosts = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       const userId = storedUser.id;
       const data = await userService.listarPosts(userId);
-      return Array.isArray(data.Posts) ? data.Posts : [];
+      const posts = Array.isArray(data.Posts) ? data.Posts : [];
+      setPostCount(posts.length);
+      return posts;
     } catch (error) {
       throw new Error(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchUserPosts();
+  }, []);
+
   return (
     <Box component="main">
       <Header />
@@ -38,13 +41,10 @@ const Profile = () => {
         }}
       >
         <ProfileContent />
-        <Typography variant="h4" sx={{ color: "#fff", mt: 6 }}>
-          Meus posts ({posts.length}) 📝
-        </Typography>
+        <PostCount count={postCount} />
         <Posts width={"70%"} fetchPosts={fetchUserPosts} profilePost={true} />
         <AddPostButton />
       </Box>
-
       <Footer />
     </Box>
   );

@@ -53,7 +53,7 @@ const userService = {
       if (!senhaValida) return { erro: "Email ou senha incorretos." };
 
       const token = jwt.sign({ id: user.id }, SECRET_KEY, {
-        expiresIn: "1h",
+        expiresIn: "2h",
       });
 
       return { user, token };

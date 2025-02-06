@@ -46,6 +46,7 @@ const router = express.Router();
  */
 router.post(
   "/posts/:id/comentarios/",
+  authMiddleware,
 
   comentarioController.criarComentario
 );
@@ -95,6 +96,7 @@ router.post(
 
 router.put(
   "/posts/comentarios/:id/curtir",
+  authMiddleware,
   comentarioController.curtirComentario
 );
 

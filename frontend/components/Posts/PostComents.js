@@ -14,6 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Snackbar, Alert } from "@mui/material";
 import comentarioService from "../../services/comentarioService";
 import { makeStyles } from "@mui/styles";
+import formatarData from "../../utils/formatarData";
 
 const useStyles = makeStyles({
   textField: {
@@ -252,7 +253,7 @@ const PostComents = ({ post }) => {
                       @{comentario.Usuario?.apelido || "Desconhecido"}
                     </Typography>
                     <Typography variant="subtitle2">
-                      {new Date(comentario.createdAt).toLocaleDateString()}
+                      {formatarData(comentario.createdAt)}
                     </Typography>
                   </Box>
                 </Box>

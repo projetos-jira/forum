@@ -129,7 +129,7 @@ const PostForm = ({ titulo, onSubmit, id }) => {
       }}
     >
       <Typography component="h1" variant="h4" sx={{ color: "#fff" }}>
-        {titulo}
+        {titulo} 📝
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2, width: 500 }}>
         <TextField

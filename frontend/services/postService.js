@@ -17,6 +17,9 @@ const postService = {
       );
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao criar post");
     }
   },
@@ -28,6 +31,9 @@ const postService = {
       });
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao listar posts");
     }
   },
@@ -44,6 +50,9 @@ const postService = {
       );
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao atualizar post");
     }
   },
@@ -53,6 +62,9 @@ const postService = {
       const response = await axios.get(`${API_URL}/${id}`, {});
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao obter post");
     }
   },
@@ -66,6 +78,9 @@ const postService = {
       });
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao deletar post");
     }
   },
@@ -83,6 +98,9 @@ const postService = {
       );
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response.data.erro || "Erro ao curtir post");
     }
   },
@@ -100,6 +118,9 @@ const postService = {
       );
       return response.data;
     } catch (error) {
+      if (error.response && error.response.status === 401) {
+        window.location.href = "http://localhost:3000/login";
+      }
       throw new Error(error.response?.data?.erro || "Erro ao descurtir post");
     }
   },
