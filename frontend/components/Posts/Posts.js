@@ -39,6 +39,9 @@ const Posts = ({ width, fetchPosts, profilePost }) => {
       try {
         const data = await fetchPosts();
         setPosts(data);
+        if (profilePost) {
+          localStorage.setItem("posts", JSON.stringify(data));
+        }
       } catch (error) {
         setAlert({
           message: "Erro ao carregar posts",

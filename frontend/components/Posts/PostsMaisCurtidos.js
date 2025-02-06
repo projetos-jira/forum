@@ -54,7 +54,7 @@ const MaisCurtidos = () => {
       onClick={() => router.push(`/posts/${post.id}`)}
       key={post.id}
       sx={{
-        marginBottom: 2,
+        marginBottom: 3,
         backgroundColor: "#232328",
         borderRadius: 4,
         transition: "transform 0.3s",
@@ -63,7 +63,7 @@ const MaisCurtidos = () => {
         },
       }}
     >
-      <CardContent className="card-content">
+      <CardContent>
         <Box>
           <Typography
             variant="h6"
@@ -92,17 +92,17 @@ const MaisCurtidos = () => {
   return (
     <Box
       sx={{
-        height: "60vh",
-        padding: 4,
+        height: "70vh",
         backgroundColor: "#2f2f34",
         borderRadius: 8,
+        padding: 6,
         ml: 6,
         mt: 6,
         width: "20%",
       }}
     >
       <Typography variant="h6" sx={{ color: "#fff", mb: 3 }}>
-        Posts Mais Curtidos
+        Posts Mais Curtidos ❤️
       </Typography>
       {loading ? (
         loadingPosts()

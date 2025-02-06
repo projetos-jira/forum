@@ -121,6 +121,7 @@ const userService = {
             "updatedAt",
             "qtd_curtidas",
           ],
+          separate: true,
           order: [["createdAt", "DESC"]],
         },
       });

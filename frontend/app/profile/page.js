@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import Header from "../../components/Layout/Header";
 import Footer from "../../components/Layout/Footer";
@@ -8,6 +9,13 @@ import AddPostButton from "../../components/Buttons/AddPostButton";
 import userService from "../../services/userService";
 
 const Profile = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const posts = JSON.parse(localStorage.getItem("posts"));
+    setPosts(posts);
+  }, []);
+
   const fetchUserPosts = async () => {
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -31,7 +39,7 @@ const Profile = () => {
       >
         <ProfileContent />
         <Typography variant="h4" sx={{ color: "#fff", mt: 6 }}>
-          Meus posts
+          Meus posts ({posts.length}) 📝
         </Typography>
         <Posts width={"70%"} fetchPosts={fetchUserPosts} profilePost={true} />
         <AddPostButton />
