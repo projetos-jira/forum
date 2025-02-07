@@ -29,12 +29,15 @@ const upload = multer();
  *               - nome
  *               - email
  *               - senha
+ *               - apelido
  *             properties:
  *               nome:
  *                 type: string
  *               email:
  *                 type: string
  *               senha:
+ *                 type: string
+ *               apelido:
  *                 type: string
  *     responses:
  *       201:
@@ -47,20 +50,23 @@ router.post("/", userController.cadastrarUser);
 /**
  * @swagger
  * /usuarios/login:
- *   get:
+ *   post:
  *     summary: Logar um usuário
  *     tags: [Usuários]
- *     parameters:
- *       - in: query
- *         name: email
- *         schema:
- *           type: string
- *         required: true
- *       - in: query
- *         name: senha
- *         schema:
- *           type: string
- *         required: true
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - senha
+ *             properties:
+ *               email:
+ *                 type: string
+ *               senha:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Usuário logado com sucesso
@@ -101,8 +107,6 @@ router.post("/login", userController.logarUser);
  *                 type: string
  *               profissao:
  *                 type: string
- *               avatar:
- *                 type: string
  *     responses:
  *       200:
  *         description: Usuário atualizado com sucesso
@@ -136,7 +140,40 @@ router.put("/:id", authMiddleware, userController.atualizarUser);
  *       403:
  *         description: Acesso negado
  */
+
 router.get("/posts/:id", authMiddleware, userController.listarUserPosts);
+
+/**
+ * @swagger
+ * /usuarios/{id}/avatar:
+ *   put:
+ *     summary: Upload de avatar do usuário
+ *     tags: [Usuários]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID do usuário
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Avatar adicionado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ *       500:
+ *         description: Erro ao fazer upload do avatar
+ */
 
 router.put("/:id/avatar", upload.single("avatar"), userController.uploadAvatar);
 

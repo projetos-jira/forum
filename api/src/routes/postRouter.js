@@ -16,6 +16,8 @@ const router = express.Router();
  *   post:
  *     summary: Criar um novo post
  *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -56,6 +58,11 @@ router.post("/", authMiddleware, postController.criarPost);
  *           type: string
  *           enum: [mais-curtidos, asc, desc]
  *         description: Filtro para ordenar os posts
+ *       - in: query
+ *         name: searchTerm
+ *         schema:
+ *           type: string
+ *         description: Termo de busca para filtrar os posts pelo título
  *     responses:
  *       200:
  *         description: Lista de posts
@@ -85,7 +92,7 @@ router.post("/", authMiddleware, postController.criarPost);
  *       400:
  *         description: Erro na requisição
  */
-router.get("/", postController.listarPosts);
+router.get("/", authMiddleware, postController.listarPosts);
 
 /**
  * @swagger
@@ -120,7 +127,6 @@ router.get("/", postController.listarPosts);
  *       403:
  *         description: Acesso negado
  */
-
 router.put("/:id", authMiddleware, postController.atualizarPost);
 
 /**
@@ -143,7 +149,7 @@ router.put("/:id", authMiddleware, postController.atualizarPost);
  *       404:
  *         description: Post não encontrado
  */
-router.get("/:id", postController.listarUmPost);
+router.get("/:id", authMiddleware, postController.listarUmPost);
 
 /**
  * @swagger
@@ -175,6 +181,8 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  *   put:
  *     summary: Curtir um post
  *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -189,7 +197,7 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  *           schema:
  *             type: object
  *             properties:
- *               userId:
+ *               user_id:
  *                 type: integer
  *     responses:
  *       200:
@@ -199,6 +207,36 @@ router.delete("/:id", authMiddleware, postController.deletarPost);
  */
 router.put("/:id/curtir", authMiddleware, postController.curtirPost);
 
+/**
+ * @swagger
+ * /posts/{id}/removerCurtida:
+ *   put:
+ *     summary: Remover curtida de um post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: ID do post
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Curtida removida com sucesso
+ *       400:
+ *         description: Erro na requisição
+ */
 router.put(
   "/:id/removerCurtida",
   authMiddleware,
